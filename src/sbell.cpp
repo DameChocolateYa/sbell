@@ -17,6 +17,13 @@ const std::string HISTFILE = std::string(getenv("HOME")) + "/.sbell_hist";
 std::vector<std::string> commandHistory;
 int commandHistoryIndex = -1;
 
+struct alias {
+    std::string abreviatedName;
+    std::string command;
+};
+
+std::vector<alias> aliasVector;
+
 std::string replaceHomeAbreviation(std::string& text) {
     if (text.find("~") != std::string::npos) {
         size_t start_pos = text.find("~");
@@ -335,6 +342,49 @@ int executeInterpreterCommands(std::vector<std::string> command) {
 
         return 0;
     }
+    else if (command[0] == "alias") {
+        bool exportInConfFile = false;
+        if (command.size() < 3) {
+            std::cerr << "alias: error: required at least 2 args\n";
+            return 1;
+        }
+        if (command.size() > 3) {
+            if (command[3] == "--all-sessions") exportInConfFile = true;
+        }
+        aliasVector.push_back(alias{command[1], command[2]});
+        if (exportInConfFile) {
+            std::ofstream file(CONFFILE);
+            file << "alias " << command[1] << " " << command[2] << "\n";
+            file.close();
+        }
+        return 0;
+    }
+    return 5;
+}
+
+int executeAlias(std::string aliasName) {
+    for (const auto& currentAlias : aliasVector) {
+        if (currentAlias.abreviatedName == aliasName) {
+            std::vector<std::string> command = splitCommand(currentAlias.command);
+
+            if (command.empty()) continue;
+
+            if (executeInterpreterCommands(command) != 5) continue;
+
+            for (int i = 0; i < command.size(); ++i) {
+                command[i] =  replaceVariableSymbol(command[i]);
+            }
+        
+            int status = executeSystemCommand(command);
+            if (status == 127) {
+                std::cerr << "command: " << command[0] << " not found\n";
+            }
+            return status;
+            if (status == 0) continue;
+            std::cout << status << "\n";
+
+        }
+    }
     return 5;
 }
 
@@ -346,10 +396,12 @@ void readConfFile() {
         std::vector<std::string> command = splitCommand(line);
         if (command.empty()) continue;
 
+        if (executeAlias(command[0]) != 5) continue;
+
         for (int i = 0; i < command.size(); ++i) {
             command[i] =  replaceVariableSymbol(command[i]);
         }
-
+        
         if (executeInterpreterCommands(command) != 5) continue;
         
         int status = executeSystemCommand(command);
@@ -379,10 +431,12 @@ int main(int argc, char **argv) {
         if (command.empty()) continue;
         saveCommandHistory(input);
 
+        if (executeAlias(command[0]) != 5) continue;
+
         for (int i = 0; i < command.size(); ++i) {
             command[i] = replaceVariableSymbol(command[i]);
         }
-
+        
         if (executeInterpreterCommands(command) != 5) continue;
 
         int status = executeSystemCommand(command);
