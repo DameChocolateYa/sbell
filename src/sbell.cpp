@@ -211,7 +211,8 @@ std::string readCommand() {
 
                             if (cursorPos < input.size()) {
                                 std::cout << "\033[" << (input.size() - cursorPos) << "D";
-                            } 
+                            }
+                            std::cout.flush();
                         }
                         break;
                     case 'B':
@@ -222,7 +223,8 @@ std::string readCommand() {
 
                             if (cursorPos < input.size()) {
                                 std::cout << "\033[" << (input.size() - cursorPos) << "D";
-                            } 
+                            }
+                            std::cout.flush();
                         }
                 }
             }
