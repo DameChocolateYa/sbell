@@ -6,8 +6,29 @@
 #include <cstdlib>
 #include <sys/wait.h>
 #include <termios.h>
+#include <fstream>
 
 std::string pathVariable = getenv("PATH");
+const std::string HISTFILE = std::string(getenv("HOME")) + "/sbell_hist";
+
+std::vector<std::string> commandHistory;
+int commandHistoryIndex = -1;
+
+void loadCommandHistory() {
+    std::ifstream file(HISTFILE);
+    std::string line;
+    while (std::getline(file, line)) {
+        commandHistory.push_back(line);
+    }
+    file.close();
+}
+
+void saveCommandHistory(const std::string& command) {
+    std::ofstream file(HISTFILE, std::ios::app);
+    file << command << "\n";
+    file.close();
+    commandHistory.push_back(command);
+}
 
 std::string getCurentPath() {
     char cwd[1024];
@@ -142,6 +163,7 @@ std::string readCommand() {
     std::string input;
     char ch;
     int cursorPos = 0;
+    commandHistoryIndex = commandHistory.size();
 
     while (true) {
         ch = getchar();
@@ -164,6 +186,19 @@ std::string readCommand() {
                             std::cout << "\033[D";
                         }
                         break;
+                    case 'A':
+                        if (commandHistoryIndex > 0) {
+                            commandHistoryIndex--;
+                            input = commandHistory[commandHistoryIndex];
+                            std::cout << "\r" << path << " ~~> " << input << "\033[K";
+                        }
+                        break;
+                    case 'B':
+                        if (commandHistoryIndex < commandHistory.size()) {
+                            commandHistoryIndex++;
+                            input = (commandHistoryIndex < commandHistory.size()) ? commandHistory[commandHistoryIndex] : "";
+                            std::cout << "\r" << path << " ~~> " << input << "\033[K";
+                        }
                 }
             }
         }
@@ -212,12 +247,15 @@ int main(int argc, char **argv) {
     signal(SIGINT, signalHandler);
     signal(SIGTSTP, signalHandler);
 
+    loadCommandHistory();
+
     while (true) {
         std::string input;
         input = readCommand();
         std::vector<std::string> command = splitCommand(input);
         
         if (command.empty()) continue;
+        saveCommandHistory(input);
 
         if (command[0] == "exit") {
             if (command.size() == 1) return 0;
