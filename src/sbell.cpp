@@ -24,6 +24,33 @@ std::string replaceHomeAbreviation(std::string& text) {
     return text;
 }
 
+
+std::string replaceVariableSymbol(std::string& text) {
+    size_t firstDelimiter = text.find("$:");
+
+    while (firstDelimiter != std::string::npos) {
+        size_t lastDelimiter = text.find("$", firstDelimiter + 2);
+        if (lastDelimiter == std::string::npos) {
+            std::cerr << "Error: cannot find $ close var\n";
+            break;
+        }
+
+        std::string variableName = text.substr(firstDelimiter + 2, lastDelimiter - (firstDelimiter + 2));
+
+        const char* variableValue = getenv(variableName.c_str());
+        if (variableValue == nullptr) {
+            std::cerr << "Advertencia: enviroment var" << variableName << "Is not defined\n";
+            variableValue = "";
+        }
+
+        text.replace(firstDelimiter, lastDelimiter - firstDelimiter + 1, variableValue);
+
+        firstDelimiter = text.find("$:", firstDelimiter + 1);
+    }
+
+    return text;
+}
+
 void loadCommandHistory() {
     std::ifstream file(HISTFILE);
     std::string line;
@@ -288,6 +315,10 @@ int main(int argc, char **argv) {
         if (command.empty()) continue;
         saveCommandHistory(input);
 
+        for (int i = 0; i < command.size(); ++i) {
+            command[i] = replaceVariableSymbol(command[i]);
+        }
+
         if (command[0] == "exit") {
             if (command.size() == 1) return 0;
             try {
@@ -307,6 +338,7 @@ int main(int argc, char **argv) {
                 continue;
             }
             setenv(command[1].c_str(), command[2].c_str(), 1);
+            continue;
         }
 
         int status = executeSystemCommand(command);
