@@ -9,6 +9,9 @@
 #include <fstream>
 
 std::string pathVariable = getenv("PATH");
+
+const std::string CONFFILE = std::string(getenv("HOME")) + "/.sbellrc";
+
 const std::string HISTFILE = std::string(getenv("HOME")) + "/.sbell_hist";
 
 std::vector<std::string> commandHistory;
@@ -299,9 +302,71 @@ void signalHandler(int signum) {
     (void*)0;
 }
 
+int executeInterpreterCommands(std::vector<std::string> command) {
+    if (command[0] == "exit") {
+        if (command.size() == 1) exit(0);
+            try {
+                exit(std::stoi(command[1]));
+            }
+            catch (const std::exception& e) {
+                exit(1);
+            }
+        }
+    else if (command[0] == "cd") {
+        changeDir(command);
+        return 0;
+    }
+    else if (command[0] == "export") {
+        bool exportInFile = false;
+        if (command.size() < 3) {
+            std::cerr << "export: error: required at least 2 args\n";
+            return 1;
+        }
+        if (command.size() > 3) {
+            if (command[3] == "--all-sessions") exportInFile = true;
+        }
+        setenv(command[1].c_str(), command[2].c_str(), 1);
+    
+        if (exportInFile) {
+            std::ofstream file(CONFFILE);
+            file << "export " << command[1] << " " << command[2] << "\n";
+            file.close();
+        }
+
+        return 0;
+    }
+    return 5;
+}
+
+void readConfFile() {
+    std::ifstream file(CONFFILE);
+    std::string line;
+    
+    while (getline(file, line)) {
+        std::vector<std::string> command = splitCommand(line);
+        if (command.empty()) continue;
+
+        for (int i = 0; i < command.size(); ++i) {
+            command[i] =  replaceVariableSymbol(command[i]);
+        }
+
+        if (executeInterpreterCommands(command) != 5) continue;
+        
+        int status = executeSystemCommand(command);
+        if (status == 127) {
+            std::cerr << "command: " << command[0] << " not found\n";
+        }
+        if (status == 0) continue;
+        std::cout << status << "\n";
+
+    }
+}
+
 int main(int argc, char **argv) {
     signal(SIGINT, signalHandler);
     signal(SIGTSTP, signalHandler);
+
+    readConfFile();
 
     loadCommandHistory();
 
@@ -319,27 +384,7 @@ int main(int argc, char **argv) {
             command[i] = replaceVariableSymbol(command[i]);
         }
 
-        if (command[0] == "exit") {
-            if (command.size() == 1) return 0;
-            try {
-                return std::stoi(command[1]);
-            }
-            catch (const std::exception& e) {
-                exit(1);
-            }
-        }
-        else if (command[0] == "cd") {
-            changeDir(command);
-            continue;
-        }
-        else if (command[0] == "export") {
-            if (command.size() < 3) {
-                std::cerr << "export: error: required at least 2 args\n";
-                continue;
-            }
-            setenv(command[1].c_str(), command[2].c_str(), 1);
-            continue;
-        }
+        if (executeInterpreterCommands(command) != 5) continue;
 
         int status = executeSystemCommand(command);
         if (status == 127) {
