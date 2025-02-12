@@ -9,7 +9,7 @@
 #include <fstream>
 
 std::string pathVariable = getenv("PATH");
-const std::string HISTFILE = std::string(getenv("HOME")) + "/sbell_hist";
+const std::string HISTFILE = std::string(getenv("HOME")) + "/.sbell_hist";
 
 std::vector<std::string> commandHistory;
 int commandHistoryIndex = -1;
@@ -21,9 +21,12 @@ void loadCommandHistory() {
         commandHistory.push_back(line);
     }
     file.close();
+    commandHistoryIndex = commandHistory.size();
 }
 
 void saveCommandHistory(const std::string& command) {
+    if (command == commandHistory[commandHistoryIndex-1]) return;
+
     std::ofstream file(HISTFILE, std::ios::app);
     file << command << "\n";
     file.close();
@@ -191,6 +194,10 @@ std::string readCommand() {
                             commandHistoryIndex--;
                             input = commandHistory[commandHistoryIndex];
                             std::cout << "\r" << path << " ~~> " << input << "\033[K";
+
+                            if (cursorPos < input.size()) {
+                                std::cout << "\033[" << (input.size() - cursorPos) << "D";
+                            } 
                         }
                         break;
                     case 'B':
@@ -198,6 +205,10 @@ std::string readCommand() {
                             commandHistoryIndex++;
                             input = (commandHistoryIndex < commandHistory.size()) ? commandHistory[commandHistoryIndex] : "";
                             std::cout << "\r" << path << " ~~> " << input << "\033[K";
+
+                            if (cursorPos < input.size()) {
+                                std::cout << "\033[" << (input.size() - cursorPos) << "D";
+                            } 
                         }
                 }
             }
