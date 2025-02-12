@@ -278,6 +278,8 @@ int main(int argc, char **argv) {
 
     loadCommandHistory();
 
+    std::cout << "Welcome to Sbell\n";
+
     while (true) {
         std::string input;
         input = readCommand();
