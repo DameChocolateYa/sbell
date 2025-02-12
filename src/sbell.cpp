@@ -21,7 +21,7 @@ std::string replaceHomeAbreviation(std::string& text) {
     if (text.find("~") != std::string::npos) {
         size_t start_pos = text.find("~");
         std::string username = getenv("USER");
-        std::string userDir = "/home/" + username + "/";
+        std::string userDir = "/home/" + username;
         text.replace(start_pos, 1, userDir);
     }
     return text;
@@ -358,7 +358,6 @@ void readConfFile() {
         }
         if (status == 0) continue;
         std::cout << status << "\n";
-
     }
 }
 
