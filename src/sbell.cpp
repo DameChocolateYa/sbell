@@ -14,6 +14,16 @@ const std::string HISTFILE = std::string(getenv("HOME")) + "/.sbell_hist";
 std::vector<std::string> commandHistory;
 int commandHistoryIndex = -1;
 
+std::string replaceHomeAbreviation(std::string& text) {
+    if (text.find("~") != std::string::npos) {
+        size_t start_pos = text.find("~");
+        std::string username = getenv("USER");
+        std::string userDir = "/home/" + username + "/";
+        text.replace(start_pos, 1, userDir);
+    }
+    return text;
+}
+
 void loadCommandHistory() {
     std::ifstream file(HISTFILE);
     std::string line;
@@ -64,6 +74,10 @@ std::vector<std::string> splitCommand(std::string command) {
 int executeSystemCommand(std::vector<std::string> command) {
     std::string commandName = command[0];
     std::vector<std::string> commandPath;
+
+    for (int i = 0; i < command.size(); ++i) {
+        command[i] = replaceHomeAbreviation(command[i]);
+    }
     
     size_t start = 0;
     size_t end = 0;
