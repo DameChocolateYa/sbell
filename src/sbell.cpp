@@ -86,7 +86,7 @@ void saveCommandHistory(const std::string& command) {
     commandHistory.push_back(command);
 }
 
-std::string getCurentPath() {
+std::string getCurrentPath() {
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
     std::string pwd(cwd);
@@ -215,7 +215,7 @@ void setRawMode(bool enable) {
 }
 
 std::string readCommand() {
-    std::string path = getCurentPath();
+    std::string path = getCurrentPath();
     std::cout << path << " ~~> ";
 
 
