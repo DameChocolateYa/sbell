@@ -68,11 +68,17 @@ void loadCommandHistory() {
         commandHistory.push_back(line);
     }
     file.close();
-    commandHistoryIndex = commandHistory.size();
+
+    if (!commandHistory.empty()) {
+    	commandHistoryIndex = commandHistory.size();
+    }
+    else {
+    	commandHistoryIndex = 0;
+    }
 }
 
 void saveCommandHistory(const std::string& command) {
-    if (command == commandHistory[commandHistoryIndex-1]) return;
+    if (!commandHistory.empty() && command == commandHistory[commandHistoryIndex-1]) return;
 
     std::ofstream file(HISTFILE, std::ios::app);
     file << command << "\n";
