@@ -216,7 +216,7 @@ void setRawMode(bool enable) {
 
 std::string readCommand() {
     std::string path = getCurentPath();
-    std::cout << path << " ~~>  ";
+    std::cout << path << " ~~> ";
 
 
     setRawMode(true);
