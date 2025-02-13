@@ -214,6 +214,12 @@ void setRawMode(bool enable) {
     tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
+bool checkBooleanVar(const char* variable) {
+    if (getenv(variable) == nullptr) return false;
+
+    return std::strcmp(getenv(variable), "true") == 0;
+}
+
 std::string readCommand() {
     std::string path = getCurrentPath();
     std::cout << path << " ~~> ";
@@ -291,7 +297,7 @@ std::string readCommand() {
                 std::cout.flush();
             }
             else {
-                std::cout << "\a" << std::flush; 
+                if (checkBooleanVar("SBELL_BELL")) std::cout << "\a" << std::flush;
             }
         }
         else {
