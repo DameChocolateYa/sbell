@@ -8,9 +8,9 @@
 #include <termios.h>
 #include <fstream>
 
-std::string pathVariable = getenv("PATH");
+#include "include/conffile.hpp"
 
-const std::string CONFFILE = std::string(getenv("HOME")) + "/.sbellrc";
+std::string pathVariable = getenv("PATH");
 
 const std::string HISTFILE = std::string(getenv("HOME")) + "/.sbell_hist";
 
@@ -35,31 +35,7 @@ std::string replaceHomeAbreviation(std::string& text) {
 }
 
 
-std::string replaceVariableSymbol(std::string& text) {
-    size_t firstDelimiter = text.find("$:");
 
-    while (firstDelimiter != std::string::npos) {
-        size_t lastDelimiter = text.find("$", firstDelimiter + 2);
-        if (lastDelimiter == std::string::npos) {
-            std::cerr << "Error: cannot find $ close var\n";
-            break;
-        }
-
-        std::string variableName = text.substr(firstDelimiter + 2, lastDelimiter - (firstDelimiter + 2));
-
-        const char* variableValue = getenv(variableName.c_str());
-        if (variableValue == nullptr) {
-            std::cerr << "Advertencia: enviroment var " << variableName << " is not defined\n";
-            variableValue = "";
-        }
-
-        text.replace(firstDelimiter, lastDelimiter - firstDelimiter + 1, variableValue);
-
-        firstDelimiter = text.find("$:", firstDelimiter + 1);
-    }
-
-    return text;
-}
 
 void loadCommandHistory() {
     std::ifstream file(HISTFILE);
@@ -350,9 +326,7 @@ int executeInterpreterCommands(std::vector<std::string> command) {
         setenv(command[1].c_str(), command[2].c_str(), 1);
 
         if (exportInFile) {
-            std::ofstream file(CONFFILE, std::ios::app);
-            file << "export " << command[1] << " " << command[2] << "\n";
-            file.close();
+            setLine("export  " + command[1] + " " + command[2], command[1]);
         }
 
         return 0;
@@ -375,9 +349,7 @@ int executeInterpreterCommands(std::vector<std::string> command) {
 
         aliasVector.push_back(alias{command[1], aliasArgs});
         if (exportInConfFile) {
-            std::ofstream file(CONFFILE, std::ios::app);
-            file << "alias " << command[1] << " " << aliasArgs << "\n";
-            file.close();
+            setLine("alias " + command[1] + " " + aliasArgs, command[1]); 
         }
         return 0;
     }
