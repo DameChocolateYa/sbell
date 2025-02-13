@@ -373,9 +373,10 @@ int executeInterpreterCommands(std::vector<std::string> command) {
         return 0;
     }
     else if (command[0] == "rmhist") {
-        std::ofstream file(CONFFILE, std::ios::trunc);
-        file << "";
+	commandHistory.clear();
+        std::ofstream file(HISTFILE, std::ofstream::out | std::ios::trunc);
         file.close();
+	return 0;
     }
     return 5;
 }
@@ -441,6 +442,7 @@ int main(int argc, char **argv) {
     std::cout << "Welcome to Sbell\n";
 
     while (true) {
+	pathVariable = getenv("PATH");
         std::string input;
         input = readCommand();
         std::vector<std::string> command = splitCommand(input);
