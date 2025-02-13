@@ -18,7 +18,7 @@ std::string replaceVariableSymbol(std::string& text) {
 
         const char* variableValue = getenv(variableName.c_str());
         if (variableValue == nullptr) {
-            std::cerr << "Advertencia: enviroment var " << variableName << " is not defined\n";
+            std::cerr << "Warning: enviroment var " << variableName << " is not defined\n";
             variableValue = "";
         }
 
