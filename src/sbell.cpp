@@ -251,7 +251,7 @@ std::string readCommand() {
                             commandHistoryIndex--;
                             input = commandHistory[commandHistoryIndex];
                             cursorPos = std::min(cursorPos, (int)input.size());
-                            std::cout << "\r" << path << " ~~> " << input << "\033[K";
+                            std::cout << "\r" << path << " ~~>" << input << "\033[K";
 
                             if (cursorPos < input.size()) {
                                 std::cout << "\033[" << (input.size() - cursorPos) << "D";
@@ -264,7 +264,7 @@ std::string readCommand() {
                             commandHistoryIndex++;
                             input = (commandHistoryIndex < commandHistory.size()) ? commandHistory[commandHistoryIndex] : "";
                             cursorPos = std::min(cursorPos, (int)input.size());
-                            std::cout << "\r" << path << " ~~> " << input << "\033[K";
+                            std::cout << "\r" << path << " ~~>" << input << "\033[K";
 
                             if (cursorPos < input.size()) {
                                 std::cout << "\033[" << (input.size() - cursorPos) << "D";
