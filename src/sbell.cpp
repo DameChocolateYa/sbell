@@ -333,19 +333,25 @@ int executeInterpreterCommands(std::vector<std::string> command) {
     }
     else if (command[0] == "alias") {
         bool exportInConfFile = false;
-        if (command.size() < 3) {
-            std::cerr << "alias: error: required at least 2 args\n";
-            return 1;
+        if (command.size() == 1) {
+            for (const auto& currentAlias : aliasVector) {
+                std::cerr << currentAlias.abreviatedName << "   " << currentAlias.command << "\n";
+            }
+            return 0;
         }
 
-	std::string aliasArgs;
-	for (int i = 2; i < command.size(); ++i) {
-		if (command[i] == "--all-sessions") {
-			exportInConfFile = true;
-			break;
-		}
-		aliasArgs.append(command[i] + " ");
-	}
+        if (command.size() == 2) {
+            std::cerr << "alias: error: required at least 2 args\n";
+        }
+
+	    std::string aliasArgs;
+	    for (int i = 2; i < command.size(); ++i) {
+		    if (command[i] == "--all-sessions") {
+			    exportInConfFile = true;
+			    break;
+		    }
+		    aliasArgs.append(command[i] + " ");
+	    }
 
         aliasVector.push_back(alias{command[1], aliasArgs});
         if (exportInConfFile) {
