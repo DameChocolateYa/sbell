@@ -290,6 +290,9 @@ std::string readCommand() {
                 } 
                 std::cout.flush();
             }
+            else {
+                std::cout << "\a" << std::flush; 
+            }
         }
         else {
             input.insert(cursorPos, 1, ch);
