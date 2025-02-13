@@ -356,13 +356,13 @@ int executeInterpreterCommands(std::vector<std::string> command) {
         }
 
 	std::string aliasArgs;
-	for (int i = 0; i < command.size(); ++i) {
+	for (int i = 2; i < command.size(); ++i) {
 		if (command[i] == "--all-sessions") {
 			exportInConfFile = true;
 			break;
 		}
 		aliasArgs.append(command[i] + " ");
-}
+	}
 
         aliasVector.push_back(alias{command[1], aliasArgs});
         if (exportInConfFile) {
@@ -414,13 +414,12 @@ void readConfFile() {
         std::vector<std::string> command = splitCommand(line);
         if (command.empty()) continue;
 
-        if (executeAlias(command[0]) != 5) continue;
-
         for (int i = 0; i < command.size(); ++i) {
             command[i] =  replaceVariableSymbol(command[i]);
         }
         
         if (executeInterpreterCommands(command) != 5) continue;
+	if (executeAlias(command[0]) != 5) continue;
         
         int status = executeSystemCommand(command);
         if (status == 127) {
@@ -449,13 +448,12 @@ int main(int argc, char **argv) {
         if (command.empty()) continue;
         saveCommandHistory(input);
 
-        if (executeAlias(command[0]) != 5) continue;
-
         for (int i = 0; i < command.size(); ++i) {
             command[i] = replaceVariableSymbol(command[i]);
         }
         
         if (executeInterpreterCommands(command) != 5) continue;
+	if (executeAlias(command[0]) != 5) continue;
 
         int status = executeSystemCommand(command);
         if (status == 127) {
