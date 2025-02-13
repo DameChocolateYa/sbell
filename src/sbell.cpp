@@ -34,9 +34,6 @@ std::string replaceHomeAbreviation(std::string& text) {
     return text;
 }
 
-
-
-
 void loadCommandHistory() {
     std::ifstream file(HISTFILE);
     std::string line;
