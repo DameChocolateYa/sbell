@@ -332,7 +332,7 @@ int executeInterpreterCommands(std::vector<std::string> command) {
         bool exportInConfFile = false;
         if (command.size() == 1) {
             for (const auto& currentAlias : aliasVector) {
-                std::cerr << currentAlias.abreviatedName << "   " << currentAlias.command << "\n";
+                std::cerr << currentAlias.abreviatedName << "='" << currentAlias.command << "'\n";
             }
             return 0;
         }
