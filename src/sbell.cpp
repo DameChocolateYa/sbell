@@ -417,6 +417,7 @@ void readConfFile() {
 
         for (int i = 0; i < command.size(); ++i) {
             command[i] =  replaceVariableSymbol(command[i]);
+	    command[i] = replaceHomeAbreviation(command[i]);
         }
         
         if (executeInterpreterCommands(command) != 5) continue;
@@ -443,6 +444,7 @@ int main(int argc, char **argv) {
 
     while (true) {
 	pathVariable = getenv("PATH");
+	std::cout << "\033[0m";
         std::string input;
         input = readCommand();
         std::vector<std::string> command = splitCommand(input);
