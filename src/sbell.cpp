@@ -339,9 +339,9 @@ int executeInterpreterCommands(std::vector<std::string> command) {
             if (command[3] == "--all-sessions") exportInFile = true;
         }
         setenv(command[1].c_str(), command[2].c_str(), 1);
-    
+
         if (exportInFile) {
-            std::ofstream file(CONFFILE);
+            std::ofstream file(CONFFILE, std::ios::app);
             file << "export " << command[1] << " " << command[2] << "\n";
             file.close();
         }
@@ -354,16 +354,28 @@ int executeInterpreterCommands(std::vector<std::string> command) {
             std::cerr << "alias: error: required at least 2 args\n";
             return 1;
         }
-        if (command.size() > 3) {
-            if (command[3] == "--all-sessions") exportInConfFile = true;
-        }
-        aliasVector.push_back(alias{command[1], command[2]});
+
+	std::string aliasArgs;
+	for (int i = 0; i < command.size(); ++i) {
+		if (command[i] == "--all-sessions") {
+			exportInConfFile = true;
+			break;
+		}
+		aliasArgs.append(command[i] + " ");
+}
+
+        aliasVector.push_back(alias{command[1], aliasArgs});
         if (exportInConfFile) {
-            std::ofstream file(CONFFILE);
-            file << "alias " << command[1] << " " << command[2] << "\n";
+            std::ofstream file(CONFFILE, std::ios::app);
+            file << "alias " << command[1] << " " << aliasArgs << "\n";
             file.close();
         }
         return 0;
+    }
+    else if (command[0] == "rmhist") {
+        std::ofstream file(CONFFILE, std::ios::trunc);
+        file << "";
+        file.close();
     }
     return 5;
 }
