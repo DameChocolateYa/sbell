@@ -43,6 +43,7 @@ void setLine(const std::string& newLine, const std::string& identifier) {
     while (getline(readFile, line)) {
         if (line.find(identifier) != std::string::npos) {
             text += newLine + "\n";
+            variableFound = true;
             continue;
         }
         text += line + "\n";
