@@ -24,6 +24,12 @@ struct alias {
 
 std::vector<alias> aliasVector;
 
+bool checkBooleanVar(const char* variable) {
+    if (getenv(variable) == nullptr) return false;
+
+    return std::strcmp(getenv(variable), "true") == 0;
+}
+
 std::string replaceHomeAbreviation(std::string& text) {
     if (text.find("~") != std::string::npos) {
         size_t start_pos = text.find("~");
@@ -185,12 +191,6 @@ void setRawMode(bool enable) {
     }
     
     tcsetattr(STDIN_FILENO, TCSANOW, &term);
-}
-
-bool checkBooleanVar(const char* variable) {
-    if (getenv(variable) == nullptr) return false;
-
-    return std::strcmp(getenv(variable), "true") == 0;
 }
 
 std::string readCommand() {
@@ -434,7 +434,9 @@ int main(int argc, char **argv) {
         std::vector<std::string> command = splitCommand(input);
         
         if (command.empty()) continue;
-        saveCommandHistory(input);
+        if (checkBooleanVar("SBELL_SAVEHIST")) {
+            saveCommandHistory(input);
+        }
 
         for (int i = 0; i < command.size(); ++i) {
             command[i] = replaceVariableSymbol(command[i]);
