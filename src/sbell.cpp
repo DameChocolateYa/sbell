@@ -270,7 +270,7 @@ std::string readCommand() {
                 std::cout.flush();
             }
             else {
-                if (checkBooleanVar("SBELL_BELL")) std::cout << "\a" << std::flush;
+                if (checkBooleanVar("SBELL_BEEP")) std::cout << "\a" << std::flush;
             }
         }
         else {
