@@ -159,6 +159,54 @@ int executeSystemCommand(std::vector<std::string> command) {
     delete[] execArgs;
 }
 
+int executeFileCommand(std::vector<std::string> command) {
+    for (int i = 0; i < command.size(); ++i) {
+        command[i] = replaceHomeAbreviation(command[i]);
+    }
+    std::string commandFile = command[0];
+
+    char** execArgs = new char*[command.size() + 1];
+    for (int i = 0; i < command.size(); ++i) {
+        execArgs[i] = const_cast<char*>(command[i].c_str());
+    }
+    execArgs[command.size()] = nullptr;
+
+    bool found = false;
+    std::string completeCommand;
+    if (access(commandFile.c_str(), X_OK) == 0) {
+        found = true;
+    }
+
+    if (!found) {
+        delete[] execArgs;
+        return 127;
+    }
+
+    pid_t pid = fork();
+    if (pid < 0) {
+        std::cerr << "Error executing binary file\n";
+        delete[] execArgs;
+        return 1;
+    }
+    else if (pid == 0) {
+        execv(commandFile.c_str(), execArgs);
+    }
+    else {
+        int status;
+        waitpid(pid, &status, 0);
+        
+        delete[] execArgs;
+
+        if (WIFEXITED(status)) {
+            return WEXITSTATUS(status);
+        }
+        else {
+            return 1;
+        }
+    }
+    delete[] execArgs;
+}
+
 int changeDir(std::vector<std::string> command) {
     if (command.size() == 1) {
         std::string newPath = "/home/";
@@ -361,6 +409,13 @@ int executeInterpreterCommands(std::vector<std::string> command) {
         std::ofstream file(HISTFILE, std::ofstream::out | std::ios::trunc);
         file.close();
 	return 0;
+    }
+    else if (command[0] == "exec") {
+        std::vector<std::string> toExecute;
+        for (int i = 1; i < command.size(); ++i) {
+            toExecute.push_back(command[i]);
+        }
+        return executeFileCommand(toExecute);
     }
     return 5;
 }
