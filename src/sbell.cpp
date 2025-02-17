@@ -28,8 +28,8 @@ struct alias {
 
 std::vector<alias> aliasVector;
 
-bool checkBooleanVar(const char* variable) {
-    if (getenv(variable) == nullptr) return false;
+bool checkBooleanVar(const char* variable, bool byDefault=false) {
+    if (getenv(variable) == nullptr) return byDefault;
 
     return std::strcmp(getenv(variable), "true") == 0;
 }
@@ -416,7 +416,7 @@ std::string readCommand() {
                 std::cout.flush();
             }
             else {
-                if (checkBooleanVar("SBELL_BEEP")) std::cout << "\a" << std::flush;
+                if (checkBooleanVar("SBELL_BEEP", true)) std::cout << "\a" << std::flush;
             }
         }
         else {
@@ -589,7 +589,7 @@ int main(int argc, char **argv) {
         std::vector<std::string> command = splitCommand(input);
         
         if (command.empty()) continue;
-        if (checkBooleanVar("SBELL_SAVEHIST")) {
+        if (checkBooleanVar("SBELL_SAVEHIST", true)) {
             saveCommandHistory(input);
         }
 
