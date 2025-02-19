@@ -40,6 +40,14 @@ std::string replaceHomeAbreviation(std::string& text) {
     return text;
 }
 
+std::string getUnifiedString(std::vector<std::string> vector, std::string separator = "") {
+    std::string result;
+    for (int i = 0; i < vector.size(); ++i) {
+        result.append(vector[i] + separator);
+    }
+    return result;
+}
+
 void loadCommandHistory() {
     std::ifstream file(HISTFILE);
     std::string line;
@@ -581,8 +589,8 @@ int main(int argc, char **argv) {
     setInterpreterVariable("SBELL_AUTHOR", "SAMUEL JORGE FRA");
 
     while (true) {
-	pathVariable = getenv("PATH");
-	std::cout << "\033[0m";
+        pathVariable = getenv("PATH");
+        std::cout << "\033[0m";
         std::string input;
         input = readCommand();
         std::vector<std::string> command = splitCommand(input);
@@ -591,6 +599,7 @@ int main(int argc, char **argv) {
         if (checkBooleanVar("SBELL_SAVEHIST", true)) {
             saveCommandHistory(input);
         }
+        setenv("HIST", getUnifiedString(commandHistory, "\n").c_str(), 1);
 
         for (int i = 0; i < command.size(); ++i) {
             command[i] = replaceVariableSymbol(command[i]);
