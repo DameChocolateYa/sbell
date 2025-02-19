@@ -1,15 +1,11 @@
 #include <iostream>
 #include <cstring>
-#include <memory>
 #include <unistd.h>
 #include <vector>
-#include <sstream>
 #include <cstdlib>
 #include <sys/wait.h>
 #include <termios.h>
 #include <fstream>
-#include <memory>
-#include <stdexcept>
 #include <array>
 
 #include "include/conffile.hpp"
@@ -73,7 +69,7 @@ std::string getCurrentPath() {
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
     std::string pwd(cwd);
-    
+
     std::string username = getenv("USER");
     username.append("");
 
@@ -81,7 +77,7 @@ std::string getCurrentPath() {
     if (std::string(cwd).find(username) != std::string::npos) {
          std::string path = "(" + username + ")" + pwd;
          return path;
-    } 
+    }
 
     return std::string(cwd);
 }
@@ -149,7 +145,7 @@ int executeSystemCommand(std::vector<std::string> command) {
     for (int i = 0; i < command.size(); ++i) {
         command[i] = replaceHomeAbreviation(command[i]);
     }
-    
+
     size_t start = 0;
     size_t end = 0;
     while ((end = pathVariable.find(":", start)) != std::string::npos) {
@@ -162,8 +158,8 @@ int executeSystemCommand(std::vector<std::string> command) {
 
    int argc = command.size();
    char** execArgs = new char*[argc + 1];
-   for (int i = 0; i < argc; ++i) { 
-       execArgs[i] = const_cast<char*>(command[i].c_str()); 
+   for (int i = 0; i < argc; ++i) {
+       execArgs[i] = const_cast<char*>(command[i].c_str());
    }
    execArgs[argc] = nullptr;
 
@@ -195,7 +191,7 @@ int executeSystemCommand(std::vector<std::string> command) {
     else {
         int status;
         waitpid(pid, &status, 0);
-        
+
         delete[] execArgs;
 
         if (WIFEXITED(status)) {
@@ -206,6 +202,7 @@ int executeSystemCommand(std::vector<std::string> command) {
         }
     }
     delete[] execArgs;
+    return 127;
 }
 
 int executeFileCommand(std::vector<std::string> command) {
@@ -243,7 +240,7 @@ int executeFileCommand(std::vector<std::string> command) {
     else {
         int status;
         waitpid(pid, &status, 0);
-        
+
         delete[] execArgs;
 
         if (WIFEXITED(status)) {
@@ -254,6 +251,7 @@ int executeFileCommand(std::vector<std::string> command) {
         }
     }
     delete[] execArgs;
+    return 127;
 }
 
 std::string getCommandReturn(std::string& text) {
@@ -335,7 +333,7 @@ void setRawMode(bool enable) {
     else {
         term.c_lflag |= (ICANON | ECHO);
     }
-    
+
     tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
@@ -375,7 +373,7 @@ std::string readCommand() {
                         if (commandHistoryIndex > 0) {
                             commandHistoryIndex--;
                             input = commandHistory[commandHistoryIndex];
-                            cursorPos = input.size(); 
+                            cursorPos = input.size();
                             std::cout << "\r" << path << " ~~> " << input << "\033[K";
 
                             if (cursorPos < input.size()) {
@@ -403,16 +401,16 @@ std::string readCommand() {
             if (cursorPos > 0) {
                 input.erase(cursorPos-1, 1);
                 cursorPos--;
-                
+
                 std::cout << "\r" << path << " ~~> " << "\033[K";
                 std::cout.flush();
-                
+
                 std::cout << input;
                 std::cout.flush();
 
                 if (cursorPos < input.size()) {
                     std::cout << "\033[" << (input.size() - cursorPos) << "D";
-                } 
+                }
                 std::cout.flush();
             }
             else {
@@ -422,16 +420,16 @@ std::string readCommand() {
         else {
             input.insert(cursorPos, 1, ch);
             cursorPos++;
-            
+
             std::cout << "\r" << path << " ~~> " << "\033[K";
             std::cout.flush();
 
             std::cout << input;
             std::cout.flush();
-             
+
             if (cursorPos < input.size()) {
                 std::cout << "\033[" << (input.size() - cursorPos) << "D";
-            }   
+            }
         }
     }
     setRawMode(false);
@@ -440,7 +438,7 @@ std::string readCommand() {
 }
 
 void signalHandler(int signum) {
-    (void*)0;
+    //(void*)0;
 }
 
 int executeInterpreterCommands(std::vector<std::string> command) {
@@ -498,7 +496,7 @@ int executeInterpreterCommands(std::vector<std::string> command) {
 
         aliasVector.push_back(alias{command[1], aliasArgs});
         if (exportInConfFile) {
-            setLine("alias " + command[1] + " " + aliasArgs, command[1]); 
+            setLine("alias " + command[1] + " " + aliasArgs, command[1]);
         }
         return 0;
     }
@@ -531,7 +529,7 @@ int executeAlias(std::string aliasName) {
                 command[i] = replaceVariableSymbol(command[i]);
                 command[i] = getCommandReturn(command[i]);
             }
-        
+
             int status = executeSystemCommand(command);
             if (status == 127) {
                 std::cerr << "command: " << command[0] << " not found\n";
@@ -539,7 +537,6 @@ int executeAlias(std::string aliasName) {
             return status;
             if (status == 0) continue;
             std::cout << status << "\n";
-
         }
     }
     return 5;
@@ -548,7 +545,7 @@ int executeAlias(std::string aliasName) {
 void readConfFile() {
     std::ifstream file(CONFFILE);
     std::string line;
-    
+
     while (getline(file, line)) {
         std::vector<std::string> command = splitCommand(line);
         if (command.empty()) continue;
@@ -558,10 +555,10 @@ void readConfFile() {
             command[i] = getCommandReturn(command[i]);
 	    command[i] = replaceHomeAbreviation(command[i]);
         }
-        
+
         if (executeInterpreterCommands(command) != 5) continue;
 	if (executeAlias(command[0]) != 5) continue;
-        
+
         int status = executeSystemCommand(command);
         if (status == 127) {
             std::cerr << "command: " << command[0] << " not found\n";
@@ -581,6 +578,7 @@ int main(int argc, char **argv) {
 
     std::cout << "Welcome to Sbell\n";
     setInterpreterVariable("CURRENT_SHELL", "sbell");
+    setInterpreterVariable("SBELL_AUTHOR", "SAMUEL JORGE FRA");
 
     while (true) {
 	pathVariable = getenv("PATH");
@@ -588,7 +586,7 @@ int main(int argc, char **argv) {
         std::string input;
         input = readCommand();
         std::vector<std::string> command = splitCommand(input);
-        
+
         if (command.empty()) continue;
         if (checkBooleanVar("SBELL_SAVEHIST", true)) {
             saveCommandHistory(input);
@@ -598,7 +596,7 @@ int main(int argc, char **argv) {
             command[i] = replaceVariableSymbol(command[i]);
             command[i] = getCommandReturn(command[i]);
         }
-        
+
         if (executeInterpreterCommands(command) != 5) continue;
 	if (executeAlias(command[0]) != 5) continue;
 
