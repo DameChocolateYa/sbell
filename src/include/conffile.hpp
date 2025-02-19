@@ -9,4 +9,6 @@ std::string replaceVariableSymbol(std::string& text);
 
 void setLine(const std::string& line, const std::string& identifier);
 
+void setInterpreterVariable(const std::string& name, const std::string& value);
+
 #endif

@@ -71,7 +71,7 @@ struct var {
 
 std::vector<var> vars;
 
-void setInterpreterVariable(const std::string& name, const std::string& value) {
+void setInterpreterVariable(const std::string& name, const std::string value) {
     for(int i = 0; i < vars.size(); ++i) {
         if (vars[i].name == name) {
 	    vars.erase(vars.begin()+i);
@@ -80,3 +80,5 @@ void setInterpreterVariable(const std::string& name, const std::string& value) {
     vars.push_back(var{name, value});
     setenv(name.c_str(), value.c_str(), 1);
 }
+qa
+

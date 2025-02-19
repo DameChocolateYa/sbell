@@ -580,6 +580,7 @@ int main(int argc, char **argv) {
     loadCommandHistory();
 
     std::cout << "Welcome to Sbell\n";
+    setInterpreterVariable("CURRENT_SHELL", "sbell");
 
     while (true) {
 	pathVariable = getenv("PATH");
