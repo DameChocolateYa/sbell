@@ -449,7 +449,7 @@ void signalHandler(int signum) {
     //(void*)0;
 }
 
-int executeInterpreterCommands(std::vector<std::string> command) {
+int executeInterpreterCommands(std::vector<std::string> command) { //NOTE: código spaghetti - arreglarlo cuanto antes
     if (command[0] == "exit") {
         if (command.size() == 1) exit(0);
             try {
@@ -576,6 +576,15 @@ void readConfFile() {
     }
 }
 
+struct commandWithUniter {
+    std::string command;
+    std::string uniter = "";
+};
+
+/*std::vector<std::string> splitLineInCommands(std::string line) {
+    // TODO: ME DA PUTA PEREZA
+    }*/
+
 int main(int argc, char **argv) {
     signal(SIGINT, signalHandler);
     signal(SIGTSTP, signalHandler);
@@ -599,7 +608,7 @@ int main(int argc, char **argv) {
         if (checkBooleanVar("SBELL_SAVEHIST", true)) {
             saveCommandHistory(input);
         }
-        setenv("HIST", getUnifiedString(commandHistory, "\n").c_str(), 1);
+        setenv("HIST", getUnifiedString(commandHistory, "\n").c_str(), 1); //FIXME: QUE PUTA MIERDA
 
         for (int i = 0; i < command.size(); ++i) {
             command[i] = replaceVariableSymbol(command[i]);
