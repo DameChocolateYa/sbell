@@ -596,6 +596,7 @@ int main(int argc, char **argv) {
     std::cout << "Welcome to Sbell\n";
     setInterpreterVariable("CURRENT_SHELL", "sbell");
     setInterpreterVariable("SBELL_AUTHOR", "SAMUEL JORGE FRA");
+    setInterpreterVariable("ILOVELINUX", "Me too :3");
 
     while (true) {
         pathVariable = getenv("PATH");
