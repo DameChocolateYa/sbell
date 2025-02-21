@@ -9,6 +9,7 @@
 #include <array>
 
 #include "include/conffile.hpp"
+#include "include/defs.hpp"
 
 std::string pathVariable = getenv("PATH");
 
@@ -594,8 +595,8 @@ int main(int argc, char **argv) {
     loadCommandHistory();
 
     std::cout << "Welcome to Sbell\n";
-    setInterpreterVariable("CURRENT_SHELL", "sbell");
-    setInterpreterVariable("SBELL_AUTHOR", "SAMUEL JORGE FRA");
+    setInterpreterVariable("CURRENT_SHELL", defs::sbell::shell);
+    setInterpreterVariable("SBELL_AUTHOR", defs::sbell::author);
     setInterpreterVariable("ILOVELINUX", "Me too :3");
 
     while (true) {
