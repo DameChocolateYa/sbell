@@ -597,6 +597,7 @@ int main(int argc, char **argv) {
     std::cout << "Welcome to Sbell\n";
     setInterpreterVariable("CURRENT_SHELL", defs::sbell::shell);
     setInterpreterVariable("SBELL_AUTHOR", defs::sbell::author);
+    setInterpreterVariable("SBELL_VERSION", defs::sbell::version);
     setInterpreterVariable("ILOVELINUX", "Me too :3");
 
     while (true) {
