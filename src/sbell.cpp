@@ -32,7 +32,7 @@ bool checkBooleanVar(const char* variable, bool byDefault=false) {
 }
 
 std::string replaceHomeAbreviation(std::string& text) {
-    if (text.find("~") != std::string::npos) {
+    while (text.find("~") != std::string::npos) {
         size_t start_pos = text.find("~");
         std::string username = getenv("USER");
         std::string userDir = "/home/" + username;
