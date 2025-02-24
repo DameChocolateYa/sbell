@@ -516,6 +516,10 @@ int executeInterpreterCommands(std::vector<std::string> command) { //NOTE: códi
 	return 0;
     }
     else if (command[0] == "exec") {
+	if (command.size() < 2) {
+	    std::cerr << "exec: required at least 1 arg\n";
+	    return -1;
+	}
         std::vector<std::string> toExecute;
         for (int i = 1; i < command.size(); ++i) {
             toExecute.push_back(command[i]);
