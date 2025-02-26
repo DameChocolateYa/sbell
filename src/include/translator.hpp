@@ -1,16 +1,19 @@
 #ifndef TRANSLATOR_HPP
 #define TRANSLATOR_HPP
 
-#include "json.hpp"
-
-using json = nlohmann::json;
+#include <iostream>
+#include <unordered_map>
 
 class Translator {
     std::unordered_map<std::string, std::string> messages;
 
 public:
-    bool loadLanguage(const std::string& lang);
+    Translator();
+    ~Translator();
+
     std::string get(const std::string& key);
-}
+private:
+    bool loadLanguage(const std::string& lang);
+};
 
 #endif

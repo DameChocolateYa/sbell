@@ -1,5 +1,5 @@
 {
-    "welcome": "Welcome to Sbell",
-    "e127": "Error: command not found: "
-    "exit": "Goodbye!"
+    "welcome": "Welcome to Sbell\n",
+    "e127": "Error: command not found: \n",
+    "exit": "Goodbye!\n"
 }

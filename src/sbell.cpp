@@ -10,6 +10,7 @@
 
 #include "include/conffile.hpp"
 #include "include/defs.hpp"
+#include "include/translator.hpp"
 
 std::string pathVariable = getenv("PATH");
 
@@ -593,6 +594,9 @@ struct commandWithUniter {
 int main(int argc, char **argv) {
     signal(SIGINT, signalHandler);
     signal(SIGTSTP, signalHandler);
+
+    Translator t;
+    std::cout << t.get("welcome");
 
     readConfFile();
 
