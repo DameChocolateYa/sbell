@@ -1,0 +1,10 @@
+{
+    "welcome": "Benvido a Sbell\n",
+    "e127": "error: comando non atopado: ",
+    "exit": "Adeus!\n",
+    "c:arg1": ": error: requerido (al menos) 1 argumento\n",
+    "c:arg2": ": error: requerido (al menos) 2 argumentos\n",
+    "ebin_exec": "error executando arquivo binario\n",
+    "ecmd_exec": "error executando comando\n"
+}
+

@@ -26,6 +26,8 @@ struct alias {
 
 std::vector<alias> aliasVector;
 
+Translator t;
+
 bool checkBooleanVar(const char* variable, bool byDefault=false) {
     if (getenv(variable) == nullptr) return byDefault;
 
@@ -191,7 +193,7 @@ int executeSystemCommand(std::vector<std::string> command) {
 
     pid_t pid = fork();
     if (pid < 0) {
-        std::cerr << "Error executing command\n";
+        std::cerr << t.get("ecmd_exec");
         delete[] execArgs;
         return 1;
     }
@@ -240,7 +242,7 @@ int executeFileCommand(std::vector<std::string> command) {
 
     pid_t pid = fork();
     if (pid < 0) {
-        std::cerr << "Error executing binary file\n";
+        std::cerr << t.get("ebin_exec");
         delete[] execArgs;
         return 1;
     }
@@ -518,7 +520,7 @@ int executeInterpreterCommands(std::vector<std::string> command) { //NOTE: códi
     }
     else if (command[0] == "exec") {
 	if (command.size() < 2) {
-	    std::cerr << "exec: required at least 1 arg\n";
+	    std::cerr << "exec" << t.get("c:arg1");
 	    return -1;
 	}
         std::vector<std::string> toExecute;
@@ -575,7 +577,7 @@ void readConfFile() {
 
         int status = executeSystemCommand(command);
         if (status == 127) {
-            std::cerr << "command: " << command[0] << " not found\n";
+            std::cerr << t.get("e127") << command[0] << "\n"; 
         }
         if (status == 0) continue;
         std::cout << status << "\n";
@@ -595,20 +597,19 @@ int main(int argc, char **argv) {
     signal(SIGINT, signalHandler);
     signal(SIGTSTP, signalHandler);
 
-    Translator t;
     std::cout << t.get("welcome");
 
     readConfFile();
 
     loadCommandHistory();
 
-    std::cout << "Welcome to Sbell\n";
     setInterpreterVariable("CURRENT_SHELL", defs::sbell::shell);
     setInterpreterVariable("SBELL_AUTHOR", defs::sbell::author);
     setInterpreterVariable("SBELL_VERSION", defs::sbell::version);
     setInterpreterVariable("ILOVELINUX", "Me too :3");
 
     while (true) {
+	t = Translator();
         pathVariable = getenv("PATH");
         std::cout << "\033[0m";
         std::string input;
@@ -631,7 +632,7 @@ int main(int argc, char **argv) {
 
         int status = executeSystemCommand(command);
         if (status == 127) {
-            std::cerr << "command: " << command[0] << " not found\n";
+            std::cerr << t.get("e127") << command[0] << "\n";
         }
         if (status == 0) continue;
         std::cout << status << "\n";
