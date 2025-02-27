@@ -5,7 +5,7 @@ pkgdesc="An minimalist interpreter"
 arch=('x86_64')
 license=('GPL')
 depends=('git')
-source=("git+https://github.com/DameChocolateYa/Sbell.git#branch=main")
+source=("git+https://github.com/DameChocolateYa/sbell.git#branch=main")
 md5sums=('SKIP')
 
 build() {
