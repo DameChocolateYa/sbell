@@ -65,6 +65,7 @@ void loadCommandHistory() {
     std::ifstream file(HISTFILE);
     if (!file.is_open()) {
         saveCommandHistory("echo 'Enjoy :)'");
+        return;
     }
     std::string line;
     while (std::getline(file, line)) {
@@ -564,13 +565,18 @@ int executeAlias(std::string aliasName) {
 void readConfFile() {
     std::ifstream file(CONFFILE);
     if (!file.is_open()) {
-       return; 
+        std::ofstream firstFile(CONFFILE);
+        firstFile << "(//) SBELL CONFIG FILE\n";
+        firstFile << "(//) THIS MAKE THE WHOLE LINE BE A COMMENT, YOU CAN UNCOMMENT NEXT LINES\n";
+        firstFile << "(//) export SBELL_WECOMEMSG false\n";
+        firstFile << "(//) export SBELL_BEEP false\n";
+        return; 
     }
     std::string line;
 
     while (getline(file, line)) {
         std::vector<std::string> command = splitCommand(line);
-        if (command.empty()) continue;
+        if (command.empty() || line.find("(//)") != std::string::npos) continue;
 
         for (int i = 0; i < command.size(); ++i) {
             command[i] =  replaceVariableSymbol(command[i]);
@@ -603,7 +609,10 @@ int main(int argc, char **argv) {
     signal(SIGINT, signalHandler);
     signal(SIGTSTP, signalHandler);
 
-    std::cout << t.get("welcome");
+    if (checkBooleanVar("SBELL_WECOMEMSG", true)) {
+    
+        std::cout << t.get("welcome");
+    }
 
     readConfFile();
 
