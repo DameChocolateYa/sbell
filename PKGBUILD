@@ -21,7 +21,7 @@ package() {
 
     install -d "$pkgdir/etc/sbell/lang"
 
-    for lang_file in "lang/*"; do 
+    for lang_file in lang/*; do 
         if [ -f "$lang_file" ]; then
             install -Dm644 "$lang_file" "$pkgdir/etc/sbell/lang/$(basename "$lang_file")"
         fi 
