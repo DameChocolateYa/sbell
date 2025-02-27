@@ -1,16 +1,23 @@
-OBJS = src/sbell.o src/conffile.o
+EXEC = sbell
+SRCS = $(wildcard src/*.cpp)
+
+OBJS = $(SRCS:.cpp=.o)
+
 CXX = g++
-CXXFLAGS = -I src/include
+CXXFLAGS = -Wall -g -std=c++17
 
-programa: $(OBJS)
-	$(CXX) $(OBJS) -o programa
+all: $(EXEC)
 
-src/sbell.o: src/sbell.cpp src/include/conffile.hpp
-	$(CXX) $(CXXFLAGS) -c src/sbell.cpp -o src/sbell.o
+$(EXEC): $(OBJS)
+	$(CXX) $(OBJS) -o $(EXEC)
 
-src/conffile.o: src/conffile.cpp src/include/conffile.hpp
-	$(CXX) $(CXXFLAGS) -c src/conffile.cpp -o src/conffile.o
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f src/*.o programa
+	rm -f $(OBJS) $(EXEC)
 
+fclean: clean
+	rm -f $(EXEC)
+
+re: fclean all
