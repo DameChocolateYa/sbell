@@ -1,3 +1,5 @@
+#By DameChocolateYa
+
 pkgname=sbell
 pkgver=1.0.0
 pkgrel=1
