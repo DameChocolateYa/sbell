@@ -20,5 +20,8 @@ package() {
     install -Dm755 sbell "$pkgdir/usr/bin/sbell"
 
     install -d "$pkgdir/etc/sbell/lang"
-    install -Dm644 "lang/*" "$pkgdir/etc/sbell/lang/"
+
+    for lang_file in "/lang/*"; do 
+        if [ -f "$lang_file" ]; then
+            install -Dm644 "$lang_file" "$pkgdir/etc/sbell/lang/$(basename "$lang_file")"
 }
