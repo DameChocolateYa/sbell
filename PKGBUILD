@@ -20,5 +20,7 @@ package() {
     touch ${HOME}/.sbellrc
     touch ${HOME}/.sbell_hist
 
+    mkdir -p "$pkgdir/etc/sbell/lang/"
+
     install -Dm755 lang/* "$pkgdir/etc/sbell/lang/"
 }
