@@ -19,7 +19,6 @@ Translator::~Translator() {}
 bool Translator::loadLanguage(const std::string& lang) {
     std::ifstream file("/etc/sbell/lang/" + lang + ".json");
     if (!file) {
-        std::cerr << "Error: cannot load lang\n";
 	return false;
     }
     json j;
