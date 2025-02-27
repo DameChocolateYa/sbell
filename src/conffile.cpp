@@ -34,8 +34,9 @@ std::string replaceVariableSymbol(std::string& text) {
 void setLine(const std::string& newLine, const std::string& identifier) {
     std::ifstream readFile(CONFFILE);
     if (!readFile.is_open()) {
-        std::cerr << "export: error: cannot open conf file\n";
-        return;
+        std::ofstream file(CONFFILE);
+        file << "";
+        file.close();
     }
 
     std::string text, line;

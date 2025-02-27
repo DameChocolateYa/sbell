@@ -52,8 +52,20 @@ std::string getUnifiedString(std::vector<std::string> vector, std::string separa
     return result;
 }
 
+void saveCommandHistory(const std::string& command) {
+    if (!commandHistory.empty() && command == commandHistory[commandHistoryIndex-1]) return;
+
+    std::ofstream file(HISTFILE, std::ios::app);
+    file << command << "\n";
+    file.close();
+    commandHistory.push_back(command);
+}
+
 void loadCommandHistory() {
     std::ifstream file(HISTFILE);
+    if (!file.is_open()) {
+        saveCommandHistory("echo 'Enjoy :)'");
+    }
     std::string line;
     while (std::getline(file, line)) {
         commandHistory.push_back(line);
@@ -66,15 +78,6 @@ void loadCommandHistory() {
     else {
     	commandHistoryIndex = 0;
     }
-}
-
-void saveCommandHistory(const std::string& command) {
-    if (!commandHistory.empty() && command == commandHistory[commandHistoryIndex-1]) return;
-
-    std::ofstream file(HISTFILE, std::ios::app);
-    file << command << "\n";
-    file.close();
-    commandHistory.push_back(command);
 }
 
 std::string getCurrentPath() {
@@ -560,6 +563,9 @@ int executeAlias(std::string aliasName) {
 
 void readConfFile() {
     std::ifstream file(CONFFILE);
+    if (!file.is_open()) {
+       return; 
+    }
     std::string line;
 
     while (getline(file, line)) {
