@@ -17,8 +17,8 @@ package() {
     cd "${pkgname}"
     install -Dm755 sbell "$pkgdir/usr/bin/sbell"
 
-    touch ${HOME}.sbellrc
-    touch ${HOME}.sbell_hist
+    touch ${HOME}/.sbellrc
+    touch ${HOME}/.sbell_hist
 
     install -Dm755 lang/* "$pkgdir/etc/sbell/lang/"
 }
