@@ -8,6 +8,8 @@ depends=('git')
 source=("git+https://github.com/DameChocolateYa/sbell.git#branch=main")
 md5sums=('SKIP')
 
+#By DameChocolateYa
+
 build() {
     cd "${pkgname}"
     make
