@@ -1,13 +1,13 @@
 #By DameChocolateYa
 
 pkgname=sbell
-pkgver=1.0.0
+pkgver=1.0
 pkgrel=1
 pkgdesc="A minimalist interpreter"
 arch=('x86_64')
 license=('GPL')
 depends=('git')
-source=("git+https://github.com/DameChocolateYa/sbell.git#branch=main")
+source=("git+https://github.com/DameChocolateYa/sbell.git#commit=8e097e269d8e20f7ddc7e55fcfefa2de2c607f8c")
 md5sums=('SKIP')
 
 build() {
