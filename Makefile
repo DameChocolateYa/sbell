@@ -18,6 +18,6 @@ clean:
 	rm -f $(OBJS) $(EXEC)
 
 fclean: clean
-	rm -f $(EXEC)
+	rm -f $(EXEC) $(OBJS)
 
 re: fclean all

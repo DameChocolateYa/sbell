@@ -566,17 +566,28 @@ void readConfFile() {
     std::ifstream file(CONFFILE);
     if (!file.is_open()) {
         std::ofstream firstFile(CONFFILE);
-        firstFile << "(//) SBELL CONFIG FILE\n";
-        firstFile << "(//) THIS MAKE THE WHOLE LINE BE A COMMENT, YOU CAN UNCOMMENT NEXT LINES\n";
-        firstFile << "(//) export SBELL_WECOMEMSG false\n";
-        firstFile << "(//) export SBELL_BEEP false\n";
+        firstFile << "// SBELL CONFIG FILE !/\n";
+        firstFile << "// THIS MAKE THE WHOLE LINE BE A COMMENT, YOU CAN UNCOMMENT NEXT LINES !/\n";
+        firstFile << "// export SBELL_WECOMEMSG false !/\n";
+        firstFile << "// export SBELL_BEEP false !/\n";
         return; 
     }
     std::string line;
 
     while (getline(file, line)) {
+	if (line.find("//") != std::string::npos) {
+	    size_t firstCommentSep = line.find("//");
+	    if (line.find("!/") != std::string::npos) {
+	        size_t lastCommentSep = line.find("!/");
+		line.erase(firstCommentSep, lastCommentSep + 2);
+	    }
+	    else {
+	        line.erase(firstCommentSep);
+	    }
+	}
+
         std::vector<std::string> command = splitCommand(line);
-        if (command.empty() || line.find("(//)") != std::string::npos) continue;
+        if (command.empty()) continue;
 
         for (int i = 0; i < command.size(); ++i) {
             command[i] =  replaceVariableSymbol(command[i]);
