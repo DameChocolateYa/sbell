@@ -568,7 +568,8 @@ void readConfFile() {
         std::ofstream firstFile(CONFFILE);
         firstFile << "// SBELL CONFIG FILE !/\n";
         firstFile << "// THIS MAKE THE WHOLE LINE BE A COMMENT, YOU CAN UNCOMMENT NEXT LINES !/\n";
-        firstFile << "// export SBELL_WELCOMEMSG false !/\n";
+        firstFile << "// export SBELL_WELCOME false !/\n";
+        firstFile << "// export SBELL_WELCOMEMSG 'Message' !/\n";
         firstFile << "// export SBELL_BEEP false !/\n";
         return; 
     }
@@ -622,9 +623,13 @@ int main(int argc, char **argv) {
 
     readConfFile();
 
-    if (checkBooleanVar("SBELL_WELCOMEMSG", true)) {
-    
-        std::cout << t.get("welcome");
+    if (checkBooleanVar("SBELL_WELCOME", true)) {
+        if (getenv("SBELL_WELCOMEMSG") == nullptr) {
+            std::cerr << t.get("welcome");
+        }
+        else {
+            std::cerr << getenv("SBELL_WELCOMEMSG") << "\n";
+        }
     }
 
     loadCommandHistory();
