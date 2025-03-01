@@ -36,7 +36,8 @@ Translator::~Translator() {}
 bool Translator::loadLanguage(const std::string& lang) {
     std::ifstream file("/etc/sbell/lang/" + lang + ".json");
     if (!file) {
-	return false;
+	    file = std::ifstream("/etc/sbell/lang/en.json");
+        if (!file) return false;
     }
     json j;
     file >> j;
