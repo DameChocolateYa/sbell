@@ -5,5 +5,6 @@
     "c:arg1": ": error: required (at least) 1 arg\n",
     "c:arg2": ": error: required (at least) 2 args\n",
     "ebin_exec": "error executing binary file\n",
-    "ecmd_exec": "error executing command\n"
+    "ecmd_exec": "error executing command\n",
+    "cderr": "error changing directory\n"
 }

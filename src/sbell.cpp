@@ -485,7 +485,9 @@ int executeInterpreterCommands(std::vector<std::string> command) { //NOTE: códi
             }
         }
     else if (command[0] == "cd") {
-        changeDir(command);
+        if (changeDir(command) != 0) {
+            std::cout << t.get("cderr");
+        };
         return 0;
     }
     else if (command[0] == "export") {
@@ -630,9 +632,21 @@ struct commandWithUniter {
     std::string uniter = "";
 };
 
-/*std::vector<std::string> splitLineInCommands(std::string line) {
-    // TODO: ME DA PUTA PEREZA
-    }*/
+std::vector<std::string> splitLineInCommands(const std::string line) {
+    std::string tempLine = line;
+    std::vector<std::string> splittedLine;
+
+    size_t start = 0;
+    size_t end = line.find("&&");
+
+    while (end != std::string::npos) {
+        splittedLine.push_back(line.substr(start, end - start));
+        start = end + 2;
+        end = line.find("&&", start);
+    }
+    splittedLine.push_back(line.substr(start));
+    return splittedLine;
+}
 
 int main(int argc, char **argv) {
     signal(SIGINT, signalHandler);
@@ -658,33 +672,37 @@ int main(int argc, char **argv) {
     setInterpreterVariable("ILOVELINUX", "Me too :3");
 
     while (true) {
-	t = Translator();
+        t = Translator();
         pathVariable = getenv("PATH");
         std::cout << "\033[0m";
         std::string input;
         input = readCommand();
-        std::vector<std::string> command = splitCommand(input);
+        std::vector<std::string> splittedLine = splitLineInCommands(input);
+        if (splittedLine.empty()) continue;
 
-        if (command.empty()) continue;
-        if (checkBooleanVar("SBELL_SAVEHIST", true)) {
-            saveCommandHistory(input);
+        for (const auto& element : splittedLine) {
+            std::vector<std::string> command = splitCommand(element);
+
+            if (checkBooleanVar("SBELL_SAVEHIST", true)) {
+                saveCommandHistory(element);
+            }
+            setenv("HIST", getUnifiedString(commandHistory, "\n").c_str(), 1); //FIXME: QUE PUTA MIERDA
+
+            for (int i = 0; i < command.size(); ++i) {
+                command[i] = replaceVariableSymbol(command[i]);
+                command[i] = getCommandReturn(command[i]);
+            }
+
+            if (executeInterpreterCommands(command) != 5) continue;
+            if (executeAlias(command[0]) != 5) continue;
+
+            int status = executeSystemCommand(command);
+            if (status == 127) {
+                std::cerr << t.get("e127") << command[0] << "\n";
+            }
+            if (status == 0) continue;
+            std::cout << status << "\n";
         }
-        setenv("HIST", getUnifiedString(commandHistory, "\n").c_str(), 1); //FIXME: QUE PUTA MIERDA
-
-        for (int i = 0; i < command.size(); ++i) {
-            command[i] = replaceVariableSymbol(command[i]);
-            command[i] = getCommandReturn(command[i]);
-        }
-
-        if (executeInterpreterCommands(command) != 5) continue;
-	if (executeAlias(command[0]) != 5) continue;
-
-        int status = executeSystemCommand(command);
-        if (status == 127) {
-            std::cerr << t.get("e127") << command[0] << "\n";
-        }
-        if (status == 0) continue;
-        std::cout << status << "\n";
     }
 
     std::cout << "Goodbye!\n";

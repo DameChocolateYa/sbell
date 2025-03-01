@@ -22,11 +22,13 @@
 
 namespace defs {
     namespace sbell {
-        const std::string version = "1.0";
+        const std::string version = "v1.0";
 	    const std::string name = "SBELL";
-	    const std::string shell = "SBELL 1.0";
-	    const std::string author = "SAMUEL JORGE FRA";
-        const std::string license = "GNU GENERAL LICENSE v3.0 (GPL3)";
+	    const std::string shell = name + " " + version;
+	    const std::string author = "DameChocolateYa";
+        const std::string license = "The GNU GENERAL LICENSE v3.0 (GPL3)";
+        const std::string yearOfCreation = "2025";
+        const std::string yearOfLastUpdate = "2025";
     }
 }
 
