@@ -588,7 +588,7 @@ void readConfFile() {
         firstFile << "// export SBELL_WELCOME false !/\n";
         firstFile << "// export SBELL_WELCOMEMSG 'Message' !/\n";
         firstFile << "// export SBELL_BEEP false !/\n";
-        return; 
+        return;
     }
     std::string line;
 
@@ -618,7 +618,7 @@ void readConfFile() {
 
         int status = executeSystemCommand(command);
         if (status == 127) {
-            std::cerr << t.get("e127") << command[0] << "\n"; 
+            std::cerr << t.get("e127") << command[0] << "\n";
         }
         if (status == 0) continue;
         std::cout << status << "\n";
