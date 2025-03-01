@@ -654,6 +654,7 @@ int main(int argc, char **argv) {
     setInterpreterVariable("CURRENT_SHELL", defs::sbell::shell);
     setInterpreterVariable("SBELL_AUTHOR", defs::sbell::author);
     setInterpreterVariable("SBELL_VERSION", defs::sbell::version);
+    setInterpreterVariable("SBELL_LICENSE", defs::sbell::license);
     setInterpreterVariable("ILOVELINUX", "Me too :3");
 
     while (true) {
