@@ -679,13 +679,12 @@ int main(int argc, char **argv) {
         input = readCommand();
         std::vector<std::string> splittedLine = splitLineInCommands(input);
         if (splittedLine.empty()) continue;
+        if (checkBooleanVar("SBELL_SAVEHIST"), true) {
+            saveCommandHistory(input);
+        }
 
         for (const auto& element : splittedLine) {
             std::vector<std::string> command = splitCommand(element);
-
-            if (checkBooleanVar("SBELL_SAVEHIST", true)) {
-                saveCommandHistory(element);
-            }
             setenv("HIST", getUnifiedString(commandHistory, "\n").c_str(), 1); //FIXME: QUE PUTA MIERDA
 
             for (int i = 0; i < command.size(); ++i) {
