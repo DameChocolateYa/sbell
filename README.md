@@ -33,6 +33,8 @@ The upcoming and basic features which are expected to be developed are:
  
 * Integrated words like: if, for...
 * Files like .sh
+* Colorful Syntax
+* Autocompletation
 * ...
 
 ## Third-party Libraries
