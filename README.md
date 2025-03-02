@@ -30,10 +30,7 @@ This project is made for educational purposes and is not recommended use it as m
 ## Upcoming features
 
 The upcoming and basic features which are expected to be developed are:
-
-* Redirections (like: > or 2>&1)
-* Pipes (|)
-* Boolean Operators (like: && or ||)
+ 
 * Integrated words like: if, for...
 * Files like .sh
 * ...
