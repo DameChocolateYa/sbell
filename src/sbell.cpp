@@ -792,6 +792,7 @@ int main(int argc, char **argv) {
         std::cout << "\033[0m";
         std::string input;
         input = readCommand();
+        if (input.empty()) continue;
         std::vector<std::string> splittedLine = splitLineInCommands(input);
         if (splittedLine.empty()) continue;
         if (checkBooleanVar("SBELL_SAVEHIST"), true) {
@@ -800,6 +801,7 @@ int main(int argc, char **argv) {
 
         for (const auto& element : splittedLine) {
             std::vector<std::string> command = splitCommand(element);
+            if (command.empty()) continue;
             setenv("HIST", getUnifiedString(commandHistory, "\n").c_str(), 1); //FIXME: QUE PUTA MIERDA
 
             for (int i = 0; i < command.size(); ++i) {
