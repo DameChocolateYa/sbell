@@ -15,6 +15,7 @@
  *   along with Sbell.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <fcntl.h>
 #include <iostream>
 #include <cstring>
 #include <unistd.h>
@@ -236,6 +237,132 @@ int executeSystemCommand(std::vector<std::string> command) {
     }
     delete[] execArgs;
     return 127;
+}
+
+int executeMegaCommands(std::vector<std::string> commands) {
+    std::vector<std::vector<std::string>> separatedCommands;
+    std::vector<std::string> currentCommand;
+
+    int inFile = -1, outFile = -1;
+    bool isPiped = false;
+
+    bool isBackground = false;
+
+    if (commands.back() == "&") {
+        isBackground = true;
+        commands.pop_back();
+    }
+
+    // Separate commands based on pipes and handle redirection
+    for (size_t i = 0; i < commands.size(); ++i) {
+        if (commands[i] == "|") {
+            separatedCommands.push_back(currentCommand);
+            currentCommand.clear();
+            isPiped = true;
+        }
+        else if (commands[i] == "<" || commands[i] == ">" || commands[i] == ">>") {
+            // Handle input/output redirection
+            if (commands[i] == "<") {
+                if (i + 1 < commands.size()) {
+                    inFile = open(commands[i + 1].c_str(), O_RDONLY);
+                    if (inFile == -1) {
+                        perror("open");
+                        return 1;
+                    }
+                    ++i;
+                }
+            } else {
+                int flags = O_WRONLY | O_CREAT | (commands[i] == ">" ? O_TRUNC : O_APPEND);
+                if (i + 1 < commands.size()) {
+                    outFile = open(commands[i + 1].c_str(), flags, 0644);
+                    if (outFile == -1) {
+                        perror("open");
+                        return 1;
+                    }
+                    ++i;
+                }
+            }
+        }
+        else {
+            currentCommand.push_back(commands[i]);
+        }
+    }
+    if (!currentCommand.empty()) {
+        separatedCommands.push_back(currentCommand);
+    }
+
+    int numCommands = separatedCommands.size();
+    int pipes[numCommands - 1][2];
+
+    // Create pipes for piped commands
+    for (int i = 0; i < numCommands - 1; ++i) {
+        if (pipe(pipes[i]) == -1) {
+            perror("pipe");
+            return 1;
+        }
+    }
+
+    // Execute commands
+    for (int i = 0; i < numCommands; i++) {
+        pid_t pid = fork();
+        if (pid == -1) {
+            perror("fork");
+            return 1;
+        } else if (pid == 0) {
+            // Handle input redirection
+            if (inFile != -1) {
+                dup2(inFile, STDIN_FILENO);
+                close(inFile);
+            }
+            // Handle output redirection
+            if (outFile != -1) {
+                dup2(outFile, STDOUT_FILENO);
+                close(outFile);
+            }
+            // Handle piping
+            if (i > 0) {
+                dup2(pipes[i - 1][0], STDIN_FILENO);
+            }
+            if (i < numCommands - 1) {
+                dup2(pipes[i][1], STDOUT_FILENO);
+            }
+
+            // Close all pipes
+            for (int j = 0; j < numCommands - 1; j++) {
+                close(pipes[j][0]);
+                close(pipes[j][1]);
+            }
+
+            // Prepare arguments for execvp
+            std::vector<char*> args;
+            for (auto& arg : separatedCommands[i]) {
+                args.push_back(const_cast<char*>(arg.c_str()));
+            }
+            args.push_back(nullptr);
+
+            execvp(args[0], args.data());
+            perror("execvp");
+            exit(1);
+        }
+        else if (!isBackground) {
+            wait(nullptr);
+        }
+    }
+
+    // Close all pipes in parent process
+    for (int i = 0; i < numCommands - 1; i++) {
+        close(pipes[i][0]);
+        close(pipes[i][1]);
+    }
+
+    // Wait for all child processes
+    if (!isBackground) {
+        for (int i = 0; i < numCommands; i++) {
+            wait(nullptr);
+        }
+    }
+
+    return 0;
 }
 
 int executeFileCommand(std::vector<std::string> command) {
@@ -691,6 +818,20 @@ int main(int argc, char **argv) {
                 command[i] = replaceVariableSymbol(command[i]);
                 command[i] = getCommandReturn(command[i]);
             }
+
+            bool commandExecuted = false;
+
+            for (const auto& arg : command) {
+                if (arg.find(">") != std::string::npos ||
+                    arg.find(">>") != std::string::npos ||
+                    arg.find("<") != std::string::npos ||
+                    arg.find("|") != std::string::npos ||
+                    arg.find("&") != std::string::npos) {
+                        executeMegaCommands(command);
+                        commandExecuted = true;
+                    }
+            }
+            if (commandExecuted) continue;
 
             if (executeInterpreterCommands(command) != 5) continue;
             if (executeAlias(command[0]) != 5) continue;
