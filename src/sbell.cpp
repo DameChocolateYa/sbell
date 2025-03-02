@@ -356,10 +356,8 @@ int executeMegaCommands(std::vector<std::string> commands) {
     }
 
     // Wait for all child processes
-    if (!isBackground) {
-        for (int i = 0; i < numCommands; i++) {
-            wait(nullptr);
-        }
+    for (int i = 0; i < numCommands; i++) {
+        wait(nullptr);
     }
 
     return 0;
