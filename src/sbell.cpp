@@ -246,13 +246,6 @@ int executeMegaCommands(std::vector<std::string> commands) {
     int inFile = -1, outFile = -1;
     bool isPiped = false;
 
-    bool isBackground = false;
-
-    if (commands.back() == "&") {
-        isBackground = true;
-        commands.pop_back();
-    }
-
     // Separate commands based on pipes and handle redirection
     for (size_t i = 0; i < commands.size(); ++i) {
         if (commands[i] == "|") {
@@ -343,9 +336,6 @@ int executeMegaCommands(std::vector<std::string> commands) {
             execvp(args[0], args.data());
             perror("execvp");
             exit(1);
-        }
-        else if (!isBackground) {
-            wait(nullptr);
         }
     }
 
@@ -823,8 +813,7 @@ int main(int argc, char **argv) {
                 if (arg.find(">") != std::string::npos ||
                     arg.find(">>") != std::string::npos ||
                     arg.find("<") != std::string::npos ||
-                    arg.find("|") != std::string::npos ||
-                    arg.find("&") != std::string::npos) {
+                    arg.find("|") != std::string::npos) {
                         executeMegaCommands(command);
                         commandExecuted = true;
                     }
