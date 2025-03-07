@@ -656,7 +656,7 @@ int executeInterpreterCommands(std::vector<std::string> command) { //NOTE: códi
         file.close();
 	return 0;
     }
-    else if (command[0] == "exec") {
+    else if (command[0] == "exec" || command[0] == "./") {
 	if (command.size() < 2) {
 	    std::cerr << "exec" << t.get("c:arg1");
 	    return -1;
