@@ -12,7 +12,7 @@ You may need `sudo`
 if you want to modify sbell or you want to install it compiling you need to do the next:
 
 * You need to install make, cmake and nlohmann-json
-* Download source code, you can do it executing `git clone https://github.com/DameChocolateYa/sbel.git (you can also download it from releases)`
+* Download source code, you can do it executing `git clone https://github.com/DameChocolateYa/sbel.git` (you can also download it from releases)
 * Unzip the source code
 * (OPTIONAL) modify the source code, the main files are in src/, the header files are in src/include/ and the lang files are in lang/
 * Compile it: first, being in parent dir you have to create a directory for the building (we are going to call it build/), then move to that dir, and execute `cmake ..`, this will generate some files, then execute `make`, when it is done, there will a executable called sbell, you can move it to /usr/bin/
