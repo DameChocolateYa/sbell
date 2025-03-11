@@ -48,5 +48,5 @@ bool Translator::loadLanguage(const std::string& lang) {
 }
 
 std::string Translator::get(const std::string& key) {
-    return messages.count(key) ? messages[key] : "??";
+    return messages.count(key) ? messages[key] : "??" + key + "\n";
 }
