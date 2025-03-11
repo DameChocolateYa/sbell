@@ -802,7 +802,7 @@ int main(int argc, char **argv) {
         for (const auto& element : splittedLine) {
             std::vector<std::string> command = splitCommand(element);
             if (command.empty()) continue;
-            setenv("HIST", getUnifiedString(commandHistory, "\n").c_str(), 1); //FIXME: QUE PUTA MIERDA
+            setenv("HIST", getUnifiedString(commandHistory, "\n").c_str(), 1); //FIXME: GREAT BUG
 
             for (int i = 0; i < command.size(); ++i) {
                 command[i] = replaceVariableSymbol(command[i]);
