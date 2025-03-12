@@ -5,6 +5,7 @@ Sbell is a minimalist Interpreter to handle basic linux terminal operations. It 
 ## Installation
 
 * Arch Linux: `yay -S sbell` or `paru -S sbell`
+* Debian/Ubuntu (and derived): download the deb package from releases, then execute `dpkg -i sbell_v(version).deb`
 
 You may need `sudo`
 

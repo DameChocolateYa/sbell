@@ -1,0 +1,3 @@
+/Dev/Sbell/build/CMakeFiles/rebuild_cache.dir
+/Dev/Sbell/build/CMakeFiles/sbell.dir
+/Dev/Sbell/build/CMakeFiles/edit_cache.dir
