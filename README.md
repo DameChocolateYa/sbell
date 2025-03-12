@@ -8,7 +8,7 @@ Sbell is a minimalist Interpreter to handle basic linux terminal operations. It 
 
 You may need `sudo`
 
-NOTE: if your distro is not available here, you can go to the next section (Modify and compile) to do a manual installation
+NOTE: if your distro is not available here, you can go to the next section [Modify and compile](#modify-and-compile) to make a manual installation
 
 ## Modify and compile
 if you want to modify sbell or you want to install it compiling you need to do the next:
