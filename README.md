@@ -1,6 +1,6 @@
 # Sbell
 
-Sbell is a minimalist Interpreter to handle basic linux terminal operations. It is completly written in C++. By the moment it's only available in arch linux, but it's expected to to arrive in Debian or derivated systems of Debian.
+Sbell is a minimalist Interpreter to handle basic linux terminal operations. It is completly written in C++. By the moment it's only available in arch linux, but it's expected to to arrive in Fedora and other linux distro. 
 
 ## Installation
 
