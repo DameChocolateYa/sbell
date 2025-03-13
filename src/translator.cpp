@@ -25,7 +25,8 @@
 
 using json = nlohmann::json;
 
-Translator::Translator() {
+Translator::Translator(char* langDir) {
+    this->langDir = std::string(langDir);
     std::string lang(getenv("LANG"));
     std::string token = lang.substr(0, lang.find("_"));
     loadLanguage(token);
@@ -34,9 +35,9 @@ Translator::Translator() {
 Translator::~Translator() {}
 
 bool Translator::loadLanguage(const std::string& lang) {
-    std::ifstream file("/etc/sbell/lang/" + lang + ".json");
+    std::ifstream file(langDir + lang + ".json");
     if (!file) {
-	    file = std::ifstream("/etc/sbell/lang/en.json");
+	    file = std::ifstream(langDir + "en.json");
         if (!file) return false;
     }
     json j;

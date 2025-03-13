@@ -25,8 +25,10 @@ class Translator {
     std::unordered_map<std::string, std::string> messages;
 
 public:
-    Translator();
+    Translator(char* langDir="/etc/sbell/lang/");
     ~Translator();
+
+    std::string langDir;
 
     std::string get(const std::string& key);
 private:

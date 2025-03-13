@@ -705,6 +705,7 @@ void readConfFile() {
         firstFile << "// export SBELL_WELCOME false !/\n";
         firstFile << "// export SBELL_WELCOMEMSG 'Message' !/\n";
         firstFile << "// export SBELL_BEEP false !/\n";
+	firstFile << "// export SBELL_LANGDIR /path/to/your/custom/lang/dir/"
         return;
     }
     std::string line;
@@ -767,6 +768,14 @@ int main(int argc, char **argv) {
     signal(SIGINT, signalHandler);
     signal(SIGTSTP, signalHandler);
 
+    setInterpreterVariable("CURRENT_SHELL", defs::sbell::shell);
+    setInterpreterVariable("SBELL_AUTHOR", defs::sbell::author);
+    setInterpreterVariable("SBELL_VERSION", defs::sbell::version);
+    setInterpreterVariable("SBELL_LICENSE", defs::sbell::license);
+    setInterpreterVariable("ILOVELINUX", "Me too :3");
+    setInterpreterVariable("SBELL_LANGDIR", "/etc/sbell/lang/");
+
+
     readConfFile();
 
     if (checkBooleanVar("SBELL_WELCOME", true)) {
@@ -780,14 +789,9 @@ int main(int argc, char **argv) {
 
     loadCommandHistory();
 
-    setInterpreterVariable("CURRENT_SHELL", defs::sbell::shell);
-    setInterpreterVariable("SBELL_AUTHOR", defs::sbell::author);
-    setInterpreterVariable("SBELL_VERSION", defs::sbell::version);
-    setInterpreterVariable("SBELL_LICENSE", defs::sbell::license);
-    setInterpreterVariable("ILOVELINUX", "Me too :3");
 
     while (true) {
-        t = Translator();
+        t = Translator(getenv("SBELL_LANGDIR"));
         pathVariable = getenv("PATH");
         std::cout << "\033[0m";
         std::string input;
