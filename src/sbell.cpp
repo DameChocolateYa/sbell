@@ -777,6 +777,7 @@ int main(int argc, char **argv) {
 
 
     readConfFile();
+    t = Translator(getenv("SBELL_LANGDIR"));
 
     if (checkBooleanVar("SBELL_WELCOME", true)) {
         if (getenv("SBELL_WELCOMEMSG") == nullptr) {
