@@ -705,7 +705,7 @@ void readConfFile() {
         firstFile << "// export SBELL_WELCOME false !/\n";
         firstFile << "// export SBELL_WELCOMEMSG 'Message' !/\n";
         firstFile << "// export SBELL_BEEP false !/\n";
-	firstFile << "// export SBELL_LANGDIR /path/to/your/custom/lang/dir/"
+	firstFile << "// export SBELL_LANGDIR /path/to/your/custom/lang/dir/";
         return;
     }
     std::string line;
