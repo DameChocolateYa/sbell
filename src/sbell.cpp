@@ -781,6 +781,10 @@ int main(int argc, char **argv) {
     readConfFile();
     t = Translator(getenv("SBELL_LANGDIR"));
 
+    if (argc > 1) {
+    	changeDir({"cd ", argv[1]});
+    }
+
     if (checkBooleanVar("SBELL_WELCOME", true)) {
         if (getenv("SBELL_WELCOMEMSG") == nullptr) {
             std::cerr << t.get("welcome");
