@@ -1,4 +1,6 @@
 /*
+ *  conffile.hpp
+ *
  *  This file is part of Sbell Interpreter.
  *
  *  Sbell is free software: you can redistribute it and/or modify
