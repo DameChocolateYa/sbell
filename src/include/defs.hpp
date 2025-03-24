@@ -31,7 +31,7 @@ namespace defs {
         const std::string license = "The GNU GENERAL LICENSE v3.0 (GPL3)";
         const std::string yearOfCreation = "2025";
         const std::string yearOfLastUpdate = "2025";
-	const std::string web = "https://github.com/DameChocolateYa/sbell"
+	const std::string web = "https://github.com/DameChocolateYa/sbell";
     }
 }
 
