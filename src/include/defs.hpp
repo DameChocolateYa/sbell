@@ -25,12 +25,13 @@
 namespace defs {
     namespace sbell {
         const std::string version = "v1.1.1";
-	    const std::string name = "SBELL";
-	    const std::string shell = name + " " + version;
-	    const std::string author = "DameChocolateYa";
+	const std::string name = "SBELL";
+	const std::string shell = name + " " + version;
+	const std::string author = "DameChocolateYa";
         const std::string license = "The GNU GENERAL LICENSE v3.0 (GPL3)";
         const std::string yearOfCreation = "2025";
         const std::string yearOfLastUpdate = "2025";
+	const std::string web = "https://github.com/DameChocolateYa/sbell"
     }
 }
 

@@ -776,7 +776,7 @@ int main(int argc, char **argv) {
     setInterpreterVariable("SBELL_LICENSE", defs::sbell::license);
     setInterpreterVariable("ILOVELINUX", "Me too :3");
     setInterpreterVariable("SBELL_LANGDIR", "/etc/sbell/lang/");
-
+    setInterpreterVariable("SBELL_WEB", defs::sbell::web);
 
     readConfFile();
     t = Translator(getenv("SBELL_LANGDIR"));
