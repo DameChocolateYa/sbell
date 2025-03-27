@@ -54,7 +54,7 @@ int main() {
     if (system("which make > /dev/null 2>&1")) {
         std::cout << "Missing make\n";
     }
-    if (system("mkdir build") != 0) {
+    if (system("mkdir -p build") != 0) {
         std::cerr << "Error creating building dir\n";
         return -1;
     }
