@@ -4,7 +4,10 @@ project(sbell LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB_RECURSE SOURCES src/*.cpp)
+set( SOURCES
+    src/conffile.cpp
+    src/translator.cpp
+    src/sbell.cpp)
 
 include_directories(src/include)
 

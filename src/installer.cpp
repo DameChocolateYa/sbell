@@ -1,0 +1,164 @@
+#include "ftxui/dom/elements.hpp"
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/screen_interactive.hpp>
+
+#include <ftxui/dom/elements.hpp>
+#include <iostream>
+
+int main() {
+    using namespace ftxui;
+
+    std::string msg = "Do you want to install sbell?";
+    bool exitProgram = false;
+
+    auto screen = ScreenInteractive::TerminalOutput();
+
+
+    auto bt_continueToInstallYes = Button(
+        "Install",
+        [&] {
+            msg = "Installation in progres (compiling)...\n";
+            screen.ExitLoopClosure()();
+        }
+    );
+    auto bt_continueToInstallNo = Button(
+        "Abort",
+        [&] {
+            std::cout << "Aborting...\n";
+            exitProgram = true;
+            screen.ExitLoopClosure()();
+        }
+    );
+    auto continueButtons = Container::Horizontal({bt_continueToInstallYes, bt_continueToInstallNo});
+
+    auto continueInstallationComponent = Renderer(continueButtons, [&] {
+        return vbox({
+            text("Sbell Installer"),
+            separator(),
+            continueButtons->Render(),
+            separator(),
+            text(msg),
+        }) | border;
+    });
+
+    screen.Loop(continueInstallationComponent);
+
+    if (exitProgram) {
+        return -1;
+    }
+
+    if (system("which cmake > /dev/null 2>&1")) {
+        std::cout << "Missing cmake\n";
+        return -1;
+    }
+    if (system("which make > /dev/null 2>&1")) {
+        std::cout << "Missing make\n";
+    }
+    if (system("mkdir build") != 0) {
+        std::cerr << "Error creating building dir\n";
+        return -1;
+    }
+    if (system("pkg-config --exists nlohmann_json") != 0) {
+        std::cerr << "Error with nlohmann-json\n";
+        return -1;
+    }
+    if (system("cd build && cmake ..") != 0) {
+        std::cerr << "Error with cmake\n";
+        return -1;
+    }
+    if (system("cd build && make") != 0) {
+        std::cerr << "Error with make\n";
+        return -1;
+    }
+
+    auto bt_continueMovingBinaryYes = Button(
+        "Yes (recommended)",
+        [&] {
+            msg = "Proceding moving binary file...";
+            screen.ExitLoopClosure()();
+        }
+    );
+    auto bt_continueMovingBinaryNo = Button(
+        "No",
+        [&] {
+            exitProgram = true;
+            msg = "Stopping here...";
+            screen.ExitLoopClosure()();
+        }
+    );
+    auto continueMovingBinaryFileButtons = Container::Horizontal({bt_continueMovingBinaryYes, bt_continueMovingBinaryNo});
+
+    auto continueMovingBinaryFileComponent = Renderer(
+        continueMovingBinaryFileButtons,
+        [&] {
+            return vbox({
+                text("Recommended, it will move binary file to a global place"),
+                separator(),
+                continueMovingBinaryFileButtons->Render(),
+                separator(),
+                text(msg),
+            }) | border;
+        }
+    );
+    screen.Loop(continueMovingBinaryFileComponent);
+
+    if (exitProgram) {
+        return 0;
+    }
+
+    if (system("mv build/sbell /usr/bin/") != 0) {
+        std::cerr << "Error moving binary file\n";
+        return -1;
+    }
+    if (system("rm -fr build") != 0) {
+        std::cerr << "\033[1;34mWARNING: cannot remove build directory, the installation will continue...\033[0m\n";
+    }
+
+    auto bt_moveLangFilesYes = Button(
+        "Yes (recommended)",
+        [&] {
+            msg = "Proceding moving lang files...\n";
+            screen.ExitLoopClosure()();
+        }
+    );
+    auto bt_moveLangFilesNo = Button(
+        "No",
+        [&] {
+            msg = "Stopping here...\n";
+            exitProgram = true;
+            screen.ExitLoopClosure()();
+        }
+    );
+    auto moveLangFilesButtons = Container::Horizontal({bt_moveLangFilesYes, bt_moveLangFilesNo});
+
+    auto moveLangFilesComponent = Renderer(
+            moveLangFilesButtons,
+            [&] {
+                return vbox({
+                    text("Recommended, it will place the lang files for sbell traductions"),
+                    separator(),
+                    moveLangFilesButtons->Render(),
+                    separator(),
+                    text(msg),
+                }) | border;
+            }
+    );
+
+    screen.Loop(moveLangFilesComponent);
+
+    if (exitProgram) {
+        return 0;
+    }
+
+    if (system("mkdir -p /etc/sbell/") != 0) {
+        std::cerr << "Error creating sbell config directory\n";
+        return -1;
+    }
+    if (system("cp -r lang/ /etc/sbell/") != 0) {
+        std::cerr << "Error copying lang files\n";
+        return -1;
+    }
+
+    std::cout << "Installation finished\n";
+    return 0;
+}
