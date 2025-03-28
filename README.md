@@ -21,6 +21,8 @@ if you want to modify sbell or you want to install it compiling you need to do t
 * Compile it: first, being in parent dir you have to create a directory for the building (we are going to call it build/), then move to that dir, and execute `cmake ..`, this will generate some files for compiling, then execute `make`, and when it is done, there will be an executable called sbell, you can move it to /usr/bin/
 * NOTE: if you download the interpreter with this method, you will need to move the lang dir to /etc/sbell/lang (creating the directories), if you don't do it, the interpreter will have some lang problems (the traductions which sbell cant find will replace it with english, but if sbell also can't find the english file, it will replace the message with ??ID), however, you can put your lang files in other directory and indicate that path putting this on .sbellrc `export SBELL_LANGDIR /path/to/your/custom/lang/dir`
 
+NOTE: you can since the v1.1.5 download the attached installer
+
 ## Q: How can I use it?
 
 * If you want to use it as main interpreter you need to: Edit /etc/shells and add this line /usr/bin/sbell | Put this on terminal `chsh -s $(which sbell)`
