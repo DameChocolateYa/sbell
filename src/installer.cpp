@@ -47,6 +47,16 @@ int main() {
         return -1;
     }
 
+    if (system("which git > /dev/null 2>&1")) {
+        std::cout << "Missing git\n";
+        return -1;
+    }
+
+    if (system("git clone https://github.com/DameChocolateYa/sbell.git") != 0) {
+        std::cout << "Failed to clone sbell repository\n";
+        return -1;
+    }
+
     if (system("which cmake > /dev/null 2>&1")) {
         std::cout << "Missing cmake\n";
         return -1;
@@ -54,19 +64,19 @@ int main() {
     if (system("which make > /dev/null 2>&1")) {
         std::cout << "Missing make\n";
     }
-    if (system("mkdir -p build") != 0) {
+    if (system("mkdir -p sbell/build") != 0) {
         std::cerr << "Error creating building dir\n";
         return -1;
     }
     if (system("pkg-config --exists nlohmann_json") != 0) {
-        std::cerr << "Error with nlohmann-json\n";
+        std::cerr << "Missing nlohmann-json\n";
         return -1;
     }
-    if (system("cd build && cmake ..") != 0) {
+    if (system("cd sbell/build && cmake ..") != 0) {
         std::cerr << "Error with cmake\n";
         return -1;
     }
-    if (system("cd build && make") != 0) {
+    if (system("cd sbell/build && make") != 0) {
         std::cerr << "Error with make\n";
         return -1;
     }
@@ -106,12 +116,12 @@ int main() {
         return 0;
     }
 
-    if (system("mv build/sbell /usr/bin/") != 0) {
+    if (system("mv sbell/build/sbell /usr/bin/") != 0) {
         std::cerr << "Error moving binary file\n";
         return -1;
     }
-    if (system("rm -fr build") != 0) {
-        std::cerr << "\033[1;34mWARNING: cannot remove build directory, the installation will continue...\033[0m\n";
+    if (system("rm -fr sbell/build") != 0) {
+        std::cerr << "\033[1;33mWARNING: cannot remove build directory, the installation will continue...\033[0m\n";
     }
 
     auto bt_moveLangFilesYes = Button(
@@ -154,9 +164,13 @@ int main() {
         std::cerr << "Error creating sbell config directory\n";
         return -1;
     }
-    if (system("cp -r lang/ /etc/sbell/") != 0) {
+    if (system("cp -r sbell/lang/ /etc/sbell/") != 0) {
         std::cerr << "Error copying lang files\n";
         return -1;
+    }
+
+    if (system("rm -fr sbell") != 0) {
+        std::cerr << "\033[1;33mWARNING: cannot remove local folder of sbell repository, installation will continue, but you should remove manually the firectory\n";
     }
 
     std::cout << "Installation finished\n";
