@@ -24,7 +24,7 @@
 
 namespace defs {
     namespace sbell {
-        const std::string version = "v1.1.1";
+        const std::string version = "v1.1.5";
 	const std::string name = "SBELL";
 	const std::string shell = name + " " + version;
 	const std::string author = "DameChocolateYa";
