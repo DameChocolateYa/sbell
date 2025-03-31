@@ -17,6 +17,8 @@
  *   along with Sbell.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// This script is made for read json files who contain the traductions of multiple languages
+
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
