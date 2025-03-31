@@ -603,7 +603,7 @@ int executeInterpreterCommands(std::vector<std::string> command) { //NOTE: SPAGH
         }
     else if (command[0] == "cd") {
         if (changeDir(command) != 0) {
-            std::cout << t.get("cderr");
+            std::cout << t.get("ecd");
         };
         return 0;
     }
