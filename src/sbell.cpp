@@ -123,50 +123,50 @@ std::vector<std::string> splitCommand(std::string command) {
     std::vector<std::string> splitedCommand;
     std::string currentWord;
     bool inQuotes = false;
-    bool inSubCommand = false;  // Para detectar $()
+    bool inSubCommand = false;  // To detect $()
 
-    // Iterar sobre cada carácter de la cadena
+    // Iterate every character of the stribg
     for (size_t i = 0; i < command.size(); ++i) {
         char ch = command[i];
 
-        // Manejo de comillas
+        // Cout management
         if (ch == '"') {
             if (inQuotes) {
-                splitedCommand.push_back(currentWord); // Agregar palabra entre comillas
+                splitedCommand.push_back(currentWord); // Add word between couts
                 currentWord.clear();
                 inQuotes = false;
             } else {
-                inQuotes = true; // Iniciar una cadena entre comillas
+                inQuotes = true; // Init a string between couts
             }
         }
         else if (ch == ' ' && !inQuotes && !inSubCommand) {
-            // Si no estamos dentro de comillas ni en una subcomando $()
+            // If we are not inside of the coutes or sub-command $()
             if (!currentWord.empty()) {
                 splitedCommand.push_back(currentWord);
                 currentWord.clear();
             }
         }
         else if (ch == '$' && i + 1 < command.size() && command[i + 1] == '(') {
-            // Detectamos el inicio de una subcadena $()
+            // We detect the sub-command init $()
             inSubCommand = true;
-            currentWord += ch;  // Agregar '$'
-            i++; // Saltamos el '('
-            currentWord += command[i];  // Agregar '('
+            currentWord += ch;  // Add '$'
+            i++; // Skip the '('
+            currentWord += command[i];  // Add '('
         }
         else if (ch == ')' && inSubCommand) {
-            // Detectamos el cierre de una subcadena $()
+            // We detect the close of a sub-string $()
             currentWord += ch;
-            splitedCommand.push_back(currentWord); // Agregar subcomando
+            splitedCommand.push_back(currentWord); // Add sub-command
             currentWord.clear();
             inSubCommand = false;
         }
         else {
-            // Agregar caracteres a la palabra actual
+            // Add characters to current word
             currentWord += ch;
         }
     }
 
-    // Si hay una palabra pendiente por agregar
+    // If there is a work which needs to be added
     if (!currentWord.empty()) {
         splitedCommand.push_back(currentWord);
     }
@@ -412,41 +412,41 @@ std::string getCommandReturn(std::string& text) {
         size_t lastDelimiter = text.find(")", firstDelimiter + 2);
         if (lastDelimiter == std::string::npos) {
             std::cerr << "Error: Falta cerrar el comando con ')'\n";
-            return text; // Evitamos procesar un comando incompleto
+            return text; // Avoid process an incomplet command
         }
 
         std::string commandName = text.substr(firstDelimiter + 2, lastDelimiter - (firstDelimiter + 2));
 
-        // Ejecutar el comando usando popen()
+        // Execute command using popen()
         std::array<char, 128> buffer;
         std::string result;
         FILE* pipe = popen(commandName.c_str(), "r");
 
         if (!pipe) {
             std::cerr << "Error al ejecutar el comando: " << commandName << "\n";
-            return text; // Devolvemos el texto original sin modificar
+            return text; // We return the original text without modify
         }
 
         while (fgets(buffer.data(), buffer.size(), pipe) != nullptr) {
             result += buffer.data();
         }
 
-        // Cerrar el pipe correctamente
+        // Close correctly the pipe
         int exitStatus = pclose(pipe);
         if (exitStatus == -1) {
             std::cerr << "Error al cerrar el pipe para: " << commandName << "\n";
             return text;
         }
 
-        // Remover caracteres de nueva línea del resultado
+	// Remove character of the result new line
         if (!result.empty() && result.back() == '\n') {
             result.pop_back();
         }
 
-        // Reemplazar en el texto original
+	// Replace in the original text
         text.replace(firstDelimiter, lastDelimiter - firstDelimiter + 1, result);
 
-        // Buscar más ocurrencias de `$()` en la cadena actualizada
+	// Search more instances of `$()` in the updated string
         firstDelimiter = text.find("$(", firstDelimiter + result.length());
     }
 
@@ -591,7 +591,7 @@ void signalHandler(int signum) {
     //(void*)0;
 }
 
-int executeInterpreterCommands(std::vector<std::string> command) { //NOTE: código spaghetti - arreglarlo cuanto antes
+int executeInterpreterCommands(std::vector<std::string> command) { //NOTE: SPAGHETTI CODE (PLS, FIX IT AS SOON AS POSSIBLE)
     if (command[0] == "exit") {
         if (command.size() == 1) exit(0);
             try {
@@ -813,7 +813,7 @@ int main(int argc, char **argv) {
         for (const auto& element : splittedLine) {
             std::vector<std::string> command = splitCommand(element);
             if (command.empty()) continue;
-            setenv("HIST", getUnifiedString(commandHistory, "\n").c_str(), 1); //FIXME: GREAT BUG
+            setenv("HIST", getUnifiedString(commandHistory, "\n").c_str(), 1); //FIXME: FATAL BUG, PLS DONT EXECUTE `command + $:HIST$`
 
             for (int i = 0; i < command.size(); ++i) {
                 command[i] = replaceVariableSymbol(command[i]);
