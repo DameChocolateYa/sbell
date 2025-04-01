@@ -22,12 +22,12 @@
 
 #include <iostream>
 
-const std::string CONFFILE = std::string(getenv("HOME")) + "/.sbellrc";
+const std::string CONF_FILE = std::string(getenv("HOME")) + "/.sbellrc";
 
-std::string replaceVariableSymbol(std::string& text);
+std::string replace_variable_symbol(std::string& text);
 
-void setLine(const std::string& line, const std::string& identifier);
+void set_line(const std::string& line, const std::string& identifier);
 
-void setInterpreterVariable(const std::string& name, const std::string& value);
+void set_interpreter_variable(const std::string& name, const std::string& value);
 
 #endif

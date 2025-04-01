@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/sbell.dir/link.d CMakeFiles/sbell.dir/src/conffile.cpp.o CMakeFiles/sbell.dir/src/translator.cpp.o CMakeFiles/sbell.dir/src/sbell.cpp.o -o sbell

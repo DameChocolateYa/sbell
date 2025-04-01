@@ -20,21 +20,21 @@
 #ifndef TRANSLATOR_HPP
 #define TRANSLATOR_HPP
 
-#include <iostream>
+#include <string>
 #include <unordered_map>
 
 class Translator {
     std::unordered_map<std::string, std::string> messages;
 
 public:
-    Translator(char* langDir="/etc/sbell/lang/");
+    Translator(std::string lang_dir="/etc/sbell/lang/");
     ~Translator();
 
-    std::string langDir;
+    std::string lang_dir;
 
     std::string get(const std::string& key);
 private:
-    bool loadLanguage(const std::string& lang);
+    bool load_lang(const std::string& lang);
 };
 
 #endif

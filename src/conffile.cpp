@@ -24,57 +24,57 @@
 
 #include "include/conffile.hpp"
 
-std::string replaceVariableSymbol(std::string& text) {
-    size_t firstDelimiter = text.find("$:");
+std::string replace_variable_symbol(std::string& text) {
+    size_t first_delimiter = text.find("$:");
 
-    while (firstDelimiter != std::string::npos) {
-        size_t lastDelimiter = text.find("$", firstDelimiter + 2);
-        if (lastDelimiter == std::string::npos) {
+    while (first_delimiter != std::string::npos) {
+        size_t last_delimiter = text.find("$", first_delimiter + 2);
+        if (last_delimiter == std::string::npos) {
             std::cerr << "Error: cannot find $ close var\n";
             break;
         }
 
-        std::string variableName = text.substr(firstDelimiter + 2, lastDelimiter - (firstDelimiter + 2));
+        std::string variable_name = text.substr(first_delimiter + 2, last_delimiter - (first_delimiter + 2));
 
-        const char* variableValue = getenv(variableName.c_str());
+        const char* variableValue = getenv(variable_name.c_str());
         if (variableValue == nullptr) {
-            std::cerr << "Warning: enviroment var " << variableName << " is not defined\n";
+            std::cerr << "Warning: enviroment var " << variable_name << " is not defined\n";
             variableValue = "";
         }
 
-        text.replace(firstDelimiter, lastDelimiter - firstDelimiter + 1, variableValue);
+        text.replace(first_delimiter, last_delimiter - first_delimiter + 1, variableValue);
 
-        firstDelimiter = text.find("$:", firstDelimiter + 1);
+        first_delimiter = text.find("$:", first_delimiter + 1);
     }
 
     return text;
 }
 
-void setLine(const std::string& newLine, const std::string& identifier) {
-    std::ifstream readFile(CONFFILE);
-    if (!readFile.is_open()) {
-        std::ofstream file(CONFFILE);
+void set_line(const std::string& new_line, const std::string& identifier) {
+    std::ifstream read_file(CONF_FILE);
+    if (!read_file.is_open()) {
+        std::ofstream file(CONF_FILE);
         file << "";
         file.close();
     }
 
     std::string text, line;
-    bool variableFound = false;
+    bool variable_found = false;
 
-    while (getline(readFile, line)) {
+    while (getline(read_file, line)) {
         if (line.find(identifier) != std::string::npos) {
-            text += newLine + "\n";
-            variableFound = true;
+            text += new_line + "\n";
+            variable_found = true;
             continue;
         }
         text += line + "\n";
     }
 
-    if (!variableFound) text += newLine + "\n";
+    if (!variable_found) text += new_line + "\n";
 
-    readFile.close();
+    read_file.close();
 
-    std::ofstream writeFile(CONFFILE, std::ios::trunc);
+    std::ofstream writeFile(CONF_FILE, std::ios::trunc);
     if (!writeFile.is_open()) {
         std::cerr << "export: error: cannot open conf file\n";
         return;
@@ -91,7 +91,7 @@ struct var {
 
 std::vector<var> vars;
 
-void setInterpreterVariable(const std::string& name, const std::string& value) {
+void set_interpreter_variables(const std::string& name, const std::string& value) {
     for(int i = 0; i < vars.size(); ++i) {
         if (vars[i].name == name) {
 	    vars.erase(vars.begin()+i);

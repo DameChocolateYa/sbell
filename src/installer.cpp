@@ -19,6 +19,7 @@
  */
 
 #include "ftxui/dom/elements.hpp"
+#include <cstdlib>
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 
@@ -29,41 +30,41 @@ int main() {
     using namespace ftxui;
 
     std::string msg = "Do you want to install sbell?";
-    bool exitProgram = false;
+    bool exit_program = false;
 
     auto screen = ScreenInteractive::TerminalOutput();
 
 
-    auto bt_continueToInstallYes = Button(
+    auto bt_continue_to_install_yes = Button(
         "Install",
         [&] {
             msg = "Installation in progres (compiling)...\n";
             screen.ExitLoopClosure()();
         }
     );
-    auto bt_continueToInstallNo = Button(
+    auto bt_continue_to_install_no = Button(
         "Abort",
         [&] {
             std::cout << "Aborting...\n";
-            exitProgram = true;
+            exit_program = true;
             screen.ExitLoopClosure()();
         }
     );
-    auto continueButtons = Container::Horizontal({bt_continueToInstallYes, bt_continueToInstallNo});
+    auto continue_buttons = Container::Horizontal({bt_continue_to_install_yes, bt_continue_to_install_no});
 
-    auto continueInstallationComponent = Renderer(continueButtons, [&] {
+    auto component_continue_installation = Renderer(continue_buttons, [&] {
         return vbox({
             text("Sbell Installer"),
             separator(),
-            continueButtons->Render(),
+            continue_buttons->Render(),
             separator(),
             text(msg),
         }) | border;
     });
 
-    screen.Loop(continueInstallationComponent);
+    screen.Loop(component_continue_installation);
 
-    if (exitProgram) {
+    if (exit_program) {
         return -1;
     }
 
@@ -101,38 +102,38 @@ int main() {
         return -1;
     }
 
-    auto bt_continueMovingBinaryYes = Button(
+    auto bt_continue_moving_binary_yes = Button(
         "Yes (recommended)",
         [&] {
             msg = "Proceding moving binary file...";
             screen.ExitLoopClosure()();
         }
     );
-    auto bt_continueMovingBinaryNo = Button(
+    auto bt_continue_moving_binary_no = Button(
         "No",
         [&] {
-            exitProgram = true;
+            exit_program = true;
             msg = "Stopping here...";
             screen.ExitLoopClosure()();
         }
     );
-    auto continueMovingBinaryFileButtons = Container::Horizontal({bt_continueMovingBinaryYes, bt_continueMovingBinaryNo});
+    auto continue_moving_binary_file_buttons = Container::Horizontal({bt_continue_moving_binary_yes, bt_continue_moving_binary_no});
 
-    auto continueMovingBinaryFileComponent = Renderer(
-        continueMovingBinaryFileButtons,
+    auto component_continue_moving_binary_file = Renderer(
+        continue_moving_binary_file_buttons,
         [&] {
             return vbox({
                 text("Recommended, it will move binary file to a global place"),
                 separator(),
-                continueMovingBinaryFileButtons->Render(),
+                continue_moving_binary_file_buttons->Render(),
                 separator(),
                 text(msg),
             }) | border;
         }
     );
-    screen.Loop(continueMovingBinaryFileComponent);
+    screen.Loop(component_continue_moving_binary_file);
 
-    if (exitProgram) {
+    if (exit_program) {
         return 0;
     }
 
@@ -144,39 +145,39 @@ int main() {
         std::cerr << "\033[1;33mWARNING: cannot remove build directory, the installation will continue...\033[0m\n";
     }
 
-    auto bt_moveLangFilesYes = Button(
+    auto bt_move_lang_files_yes = Button(
         "Yes (recommended)",
         [&] {
             msg = "Proceding moving lang files...\n";
             screen.ExitLoopClosure()();
         }
     );
-    auto bt_moveLangFilesNo = Button(
+    auto bt_move_lang_files_no = Button(
         "No",
         [&] {
             msg = "Stopping here...\n";
-            exitProgram = true;
+            exit_program = true;
             screen.ExitLoopClosure()();
         }
     );
-    auto moveLangFilesButtons = Container::Horizontal({bt_moveLangFilesYes, bt_moveLangFilesNo});
+    auto move_lang_files_button = Container::Horizontal({bt_move_lang_files_yes, bt_move_lang_files_no});
 
-    auto moveLangFilesComponent = Renderer(
-            moveLangFilesButtons,
+    auto component_move_lang_files = Renderer(
+            move_lang_files_button,
             [&] {
                 return vbox({
                     text("Recommended, it will place the lang files for sbell traductions"),
                     separator(),
-                    moveLangFilesButtons->Render(),
+                    move_lang_files_button->Render(),
                     separator(),
                     text(msg),
                 }) | border;
             }
     );
 
-    screen.Loop(moveLangFilesComponent);
+    screen.Loop(component_move_lang_files);
 
-    if (exitProgram) {
+    if (exit_program) {
         return 0;
     }
 

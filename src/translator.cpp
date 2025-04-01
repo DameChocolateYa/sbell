@@ -23,25 +23,24 @@
 #include <fstream>
 #include <unordered_map>
 #include <nlohmann/json.hpp>
-#include <sstream>
 
 #include "include/translator.hpp"
 
 using json = nlohmann::json;
 
-Translator::Translator(char* langDir) {
-    this->langDir = std::string(langDir);
+Translator::Translator(std::string lang_dir) {
+    this->lang_dir = std::string(lang_dir);
     std::string lang(getenv("LANG"));
     std::string token = lang.substr(0, lang.find("_"));
-    loadLanguage(token);
+    load_lang(token);
 }
 
 Translator::~Translator() {}
 
-bool Translator::loadLanguage(const std::string& lang) {
-    std::ifstream file(langDir + lang + ".json");
+bool Translator::load_lang(const std::string& lang) {
+    std::ifstream file(lang_dir + lang + ".json");
     if (!file) {
-	    file = std::ifstream(langDir + "en.json");
+	    file = std::ifstream(lang_dir + "en.json");
         if (!file) return false;
     }
     json j;
