@@ -28,9 +28,9 @@
 #include <fstream>
 #include <array>
 
-#include "include/conffile.hpp"
-#include "include/defs.hpp"
-#include "include/translator.hpp"
+#include "conffile.hpp"
+#include "defs.hpp"
+#include "translator.hpp"
 
 std::string path_variable = getenv("PATH");
 
