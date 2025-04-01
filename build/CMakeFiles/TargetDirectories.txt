@@ -1,3 +1,0 @@
-/home/samuel/dev/sbell/build/CMakeFiles/sbell.dir
-/home/samuel/dev/sbell/build/CMakeFiles/edit_cache.dir
-/home/samuel/dev/sbell/build/CMakeFiles/rebuild_cache.dir
