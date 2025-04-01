@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 
-#include "include/conffile.hpp"
+#include "conffile.hpp"
 
 std::string replace_variable_symbol(std::string& text) {
     size_t first_delimiter = text.find("$:");
@@ -91,7 +91,7 @@ struct var {
 
 std::vector<var> vars;
 
-void set_interpreter_variables(const std::string& name, const std::string& value) {
+void set_interpreter_variable(const std::string& name, const std::string& value) {
     for(int i = 0; i < vars.size(); ++i) {
         if (vars[i].name == name) {
 	    vars.erase(vars.begin()+i);

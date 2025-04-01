@@ -24,7 +24,7 @@
 #include <unordered_map>
 #include <nlohmann/json.hpp>
 
-#include "include/translator.hpp"
+#include "translator.hpp"
 
 using json = nlohmann::json;
 
