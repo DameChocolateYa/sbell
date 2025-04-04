@@ -17,6 +17,10 @@
  *   along with Sbell.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef __linux__
+    #error Platform not supported
+#endif
+
 #include <fcntl.h>
 #include <iostream>
 #include <cstring>
@@ -766,11 +770,6 @@ std::vector<std::string> splite_line_in_commands(const std::string line) {
 }
 
 int main(int argc, char **argv) {
-    #ifndef __linux__
-	std::cerr << "You are not using a linux system\n";
-        return -1;
-    #endif
-
     signal(SIGINT, signal_handler);
     signal(SIGTSTP, signal_handler);
 
