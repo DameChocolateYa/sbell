@@ -18,6 +18,10 @@
  *   along with Sbell.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef __linux__
+#error Platform not supported
+#endif
+
 #include "ftxui/dom/elements.hpp"
 #include <cstdlib>
 #include <ftxui/component/component.hpp>
