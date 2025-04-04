@@ -18,7 +18,7 @@
  */
 
 #ifndef __linux__
-    #error Platform not supported
+#error Platform not supported
 #endif
 
 #include <fcntl.h>
